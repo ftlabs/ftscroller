@@ -1409,7 +1409,7 @@ var FTScroller, CubicBezier;
 				if (_scrollableAxes.hasOwnProperty(axis)) {
 					computedStyle = window.getComputedStyle(_scrollNodes[axis], null)[_vendorTransformLookup];
 					splitStyle = computedStyle.split(', ');
-					_baseScrollPosition[axis] = parseInt(splitStyle[(axis === 'y') ? 5 : 4]);
+					_baseScrollPosition[axis] = parseInt(splitStyle[(axis === 'y') ? 5 : 4], 10);
 					_lastScrollPosition[axis] = _baseScrollPosition[axis];
 				}
 			}
