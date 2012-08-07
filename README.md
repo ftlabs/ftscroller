@@ -28,10 +28,10 @@ var scroller = new FTScroller(containerel, {
 
 FTScroller is designed to accommodate a range of use cases.  Here are some examples - feel free to copy the code and use as the basis for your own projects.
 
-* [Vertical continuous list](examples/verticalcontinuous.html)
-* [Horizontal paged](examples/horizontalpaged.html) (and a [strict version](examples/horixontalpaged-strict.html), constrained to scrolling one page at a time)
-* [Multiple vertical scrollers in a horizontally paged scroller](examples/galleryscrollers.html)
-* [Whole page scroller](examples/wholepage.html)
+* [Vertical continuous list](http://ftlabs.github.com/ftscroller/examples/verticalcontinuous.html)
+* [Horizontal paged](http://ftlabs.github.com/ftscroller/examples/horizontalpaged.html) (and a [strict version](http://ftlabs.github.com/ftscroller/examples/horizontalpaged-strict.html), constrained to scrolling one page at a time)
+* [Multiple vertical scrollers in a horizontally paged scroller](http://ftlabs.github.com/ftscroller/examples/galleryscrollers.html)
+* [Whole page scroller](http://ftlabs.github.com/ftscroller/examples/wholepage.html)
 
 
 ## Options
