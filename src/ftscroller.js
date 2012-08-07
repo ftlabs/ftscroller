@@ -418,7 +418,7 @@ var FTScroller, CubicBezier;
 					targetPosition = Math.min(0, Math.max(_metrics.scrollEnd[axis], targetPosition));
 
 					// Snap if appropriate
-					if (_instanceOptions.snapping) {
+					if (_instanceOptions.snapping && _snapGridSize[axis]) {
 						targetPosition = Math.round(targetPosition / _snapGridSize[axis]) * _snapGridSize[axis];
 					}
 
@@ -1089,7 +1089,7 @@ var FTScroller, CubicBezier;
 					}
 
 					// If a grid is present, find the nearest grid delineator.
-					if (_instanceOptions.snapping) {
+					if (_instanceOptions.snapping && _snapGridSize[axis]) {
 						coordinatesToReturn[axis] = Math.round(coordinates[axis] / _snapGridSize[axis]) * _snapGridSize[axis];
 						continue;
 					}
