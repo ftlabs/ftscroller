@@ -33,7 +33,7 @@
 	<p>This example is set up as you might want to set up a genuine gallery.  Scrolling responds at once, using a scrollResponseBoundary of 1, but only locks scrolling to that axis after 15 pixels using a scrollBoundary of 15.  Panning takes a little more to respond, with a scrollResponseBoundary of 8, and also locks to panning using a scrollBoundary of 20.  Scrolls respond instantly but can convert to pans, and scrolling is preferred over panning if the input movement is diagonal.</p>
 	<div id='gallery_one' class='gallerywrapper'>
 		<div class='scrollable_h'>
-	
+
 			<!-- Content from Wikipedia.  Skip to the bottom for the scroller JavaScript. -->
 			<div class="horizontalwrapper">
 				<div class='scrollable_v1 vscroller'><section>
@@ -42,7 +42,7 @@
 				<p>There are several allotropes of carbon of which the best known are graphite, diamond, and amorphous carbon. The physical properties of carbon vary widely with the allotropic form. For example, diamond is highly transparent, while graphite is opaque and black. Diamond is among the hardest materials known, while graphite is soft enough to form a streak on paper (hence its name, from the Greek word "to write"). Diamond has a very low electrical conductivity, while graphite is a very good conductor. Under normal conditions, diamond has the highest thermal conductivity of all known materials.</p>
 				<p>All carbon allotropes are solids under normal conditions with graphite being the most thermodynamically stable form. They are chemically resistant and require high temperature to react even with oxygen. The most common oxidation state of carbon in inorganic compounds is +4, while +2 is found in carbon monoxide and other transition metal carbonyl complexes. The largest sources of inorganic carbon are limestones, dolomites and carbon dioxide, but significant quantities occur in organic deposits of coal, peat, oil and methane clathrates. Carbon forms more compounds than any other element, with almost ten million pure organic compounds described to date, which in turn are a tiny fraction of such compounds that are theoretically possible under standard conditions.</p>
 				<p>Carbon is the 15th most abundant element in the Earth's crust, and the fourth most abundant element in the universe by mass after hydrogen, helium, and oxygen. It is present in all known life forms, and in the human body carbon is the second most abundant element by mass (about 18.5%) after oxygen. This abundance, together with the unique diversity of organic compounds and their unusual polymer-forming ability at the temperatures commonly encountered on Earth, make this element the chemical basis of all known life.</p>
-	
+
 				<h2> <span class="mw-headline" id="Characteristics">Characteristics</span></h2>
 				<p>The different forms or <i>allotropes</i> of carbon (see below) include the hardest naturally occurring substance, diamond, and also one of the softest known substances, graphite. Moreover, it has an affinity for bonding with other small atoms, including other carbon atoms, and is capable of forming multiple stable covalent bonds with such atoms. As a result, carbon is known to form almost ten million different compounds; the large majority of all chemical compounds. Carbon also has the highest sublimation point of all elements. At atmospheric pressure it has no melting point as its triple point is at 10.8 ± 0.2&nbsp;MPa and 4,600 ± 300 K (~4,330 °C or 7,820 °F), so it sublimates at about 3,900&nbsp;K.</p>
 				<p>Carbon sublimes in a carbon arc which has a temperature of about 5,800 K (5,530 °C; 9,980 °F). Thus, irrespective of its allotropic form, carbon remains solid at higher temperatures than the highest melting point metals such as tungsten or rhenium. Although thermodynamically prone to oxidation, carbon resists oxidation more effectively than elements such as iron and copper that are weaker reducing agents at room temperature.</p>
@@ -96,6 +96,7 @@
 	<!--Include FT Scroller source (can be included at any point as long as it's loaded before being used)-->
 	<script src='../lib/ftscroller.js'></script>
 
+
 	<!--Set up the scrollers-->
 	<script>
 
@@ -118,7 +119,7 @@
 
 		// Set up the horizontal scroller, enabling snapping and disabling bouncing
 		var panningOpts = {
-			scrollingY: false, 
+			scrollingY: false,
 			scrollbars: false,
 			snapping: true,
 			scrollResponseBoundary: 8,
@@ -150,6 +151,7 @@
 		panningOpts.scrollResponseBoundary = 30;
 		panningOpts.scrollBoundary = 30;
 		new FTScroller(document.querySelector('#gallery_three .scrollable_h'), panningOpts);
+
 	</script>
 </body>
 </html>
