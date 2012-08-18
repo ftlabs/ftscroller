@@ -1,7 +1,5 @@
 /**
- * @preserve
- *
- * FTScroller: touch and mouse-based scrolling for DOM elements larger than their containers.
+ * @license FTScroller: touch and mouse-based scrolling for DOM elements larger than their containers.
  *
  * While this is a rewrite, it is heavily inspired by two projects:
  * 1) Uxebu TouchScroll (https://github.com/davidaurelio/TouchScroll), BSD licensed:
@@ -15,19 +13,45 @@
  * @copyright The Financial Times Ltd [All rights reserved]
  * @licence MIT licence (see LICENCE.txt)
  * @codingstandard ftlabs-jslint
+ *
+ * Includes CubicBezier:
+ *
+ * Copyright (C) 2008 Apple Inc. All Rights Reserved.
+ * Copyright (C) 2010 David Aurelio. All Rights Reserved.
+ * Copyright (C) 2010 uxebu Consulting Ltd. & Co. KG. All Rights Reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE INC., DAVID AURELIO, AND UXEBU
+ * CONSULTING LTD. & CO. KG ``AS IS'' AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL APPLE INC. OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 /*jslint nomen: true, vars: true, browser: true, es5: true, continue: true*/
 /*globals FTScrollerOptions*/
-
-var FTScroller, CubicBezier;
 
 (function () {
 	'use strict';
 
 	// Global flag to determine if any scroll is currently active.  This prevents
 	// issues when using multiple scrollers, particularly when they're nested.
-	var _ftscrollerMoving = false;
+	var _ftscrollerMoving = null;
 
 	// Determine whether pointer events or touch events can be used
 	var _trackPointerEvents = window.navigator.msPointerEnabled;
@@ -107,8 +131,11 @@ var FTScroller, CubicBezier;
 	 * construct the scroller in, and any scrolling options.
 	 * Note that app-wide options can also be set using a global FTScrollerOptions
 	 * object.
+	 *
+	 * @constructor
+	 * @expose
 	 */
-	FTScroller = function (domNode, options) {
+	self.FTScroller = function FTScroller(domNode, options) {
 		var key;
 		var destroy, setSnapSize, scrollTo, scrollBy, updateDimensions, addEventListener, removeEventListener, _startScroll, _updateScroll, _endScroll, _finalizeScroll, _interruptScroll, _flingScroll, _snapScroll, _getSnapPositionForPosition, _initializeDOM, _existingDOMValid, _domChanged, _updateDimensions, _updateScrollbarDimensions, _updateElementPosition, _updateSegments, _setAxisPosition, _scheduleAxisPosition, _fireEvent, _childFocused, _modifyDistanceBeyondBounds, _startAnimation, _scheduleRender, _cancelAnimation, _toggleEventHandlers, _onTouchStart, _onTouchMove, _onTouchEnd, _onMouseDown, _onMouseMove, _onMouseUp, _onPointerDown, _onPointerMove, _onPointerUp, _onPointerCancel, _onPointerCaptureEnd, _onClick, _onMouseScroll, _captureInput, _releaseInputCapture, _getBoundingRect;
 
@@ -121,61 +148,76 @@ var FTScroller, CubicBezier;
 		var _instanceOptions = {
 
 			// Whether to display scrollbars as appropriate
+			/** @expose */
 			scrollbars: true,
 
 			// Enable scrolling on the X axis if content is available
+			/** @expose */
 			scrollingX: true,
 
 			// Enable scrolling on the Y axis if content is available
+			/** @expose */
 			scrollingY: true,
 
 			// The initial movement required to trigger a scroll, in pixels
+			/** @expose */
 			scrollBoundary: 1,
 
 			// The content width to use when determining scroller dimensions.  If this
 			// is false, the width will be detected based on the actual content.
+			/** @expose */
 			contentWidth: undefined,
 
 			// The content height to use when determining scroller dimensions.  If this
 			// is false, the height will be detected based on the actual content.
+			/** @expose */
 			contentHeight: undefined,
 
 			// Enable snapping of content to 'pages' or a pixel grid
+			/** @expose */
 			snapping: false,
 
 			// Define the horizontal interval of the pixel grid; snapping must be enabled for this to
 			// take effect.  If this is not defined, snapping will use intervals based on container size.
+			/** @expose */
 			snapSizeX: undefined,
 
 			// Define the vertical interval of the pixel grid; snapping must be enabled for this to
 			// take effect.  If this is not defined, snapping will use intervals based on container size.
+			/** @expose */
 			snapSizeY: undefined,
 
 			// Control whether snapping should be fully paginated, only ever flicking to the next page
 			// and not beyond.  Snapping needs to be enabled for this to take effect.
+			/** @expose */
 			paginatedSnap: false,
 
 			// Allow scroll bouncing and elasticity near the ends and grid
+			/** @expose */
 			bouncing: true,
 
 			// Automatically detects changes to the contained markup and
 			// updates its dimensions whenever the content changes. This is
 			// set to false if a contentWidth or contentHeight are supplied.
+			/** @expose */
 			updateOnChanges: true,
 
 			// Automatically catches changes to the window size and updates
 			// its dimensions.
+			/** @expose */
 			updateOnWindowResize: false,
 
 			// The alignment to use if the content is smaller than the container;
 			// this also applies to initial positioning of scrollable content.
 			// Valid alignments are -1 (top or left), 0 (center), and 1 (bottom or right).
+			/** @expose */
 			baseAlignments: { x: -1, y: -1 },
 
 			// Whether to use a window scroll flag, eg window.foo, to control whether
 			// to allow scrolling to start or now.  If the window flag is set to true,
 			// this element will not start scrolling; this element will also toggle
 			// the variable while scrolling
+			/** @expose */
 			windowScrollingActiveFlag: undefined,
 
 			// Instead of using translate3d for transforms, a normal translate
@@ -183,16 +225,19 @@ var FTScroller, CubicBezier;
 			// platforms which support it; this is to allow CSS inheritance to
 			// be used to allow easy per-device or even dynamic disabling
 			// and re-enabling of 3d acceleration for devices with 3d issues.
+			/** @expose */
 			hwAccelerationClass: 'ftscroller_hwaccelerated',
 
 			// While use of requestAnimationFrame is highly recommended on platforms
 			// which support it, it can result in the animation being a further half-frame
 			// behind the input method, increasing perceived lag slightly.  To disable this,
 			// set this property to false.
+			/** @expose */
 			enableRequestAnimationFrameSupport: true,
 
 			// Set the maximum time (ms) that a fling can take to complete; if
 			// this is not set, flings will complete instantly
+			/** @expose */
 			maxFlingDuration: 1000
 		};
 
@@ -252,8 +297,8 @@ var FTScroller, CubicBezier;
 		var _kDecelerateBezier = new CubicBezier(0, 0.5, 0.5, 1);
 
 		// Allow certain events to be debounced
-		var _domChangeDebouncer = false;
-		var _scrollWheelEndDebouncer = false;
+		var _domChangeDebouncer = null;
+		var _scrollWheelEndDebouncer = null;
 
 		// Performance switches on browsers supporting requestAnimationFrame
 		var _animationFrameRequest = false;
@@ -327,7 +372,7 @@ var FTScroller, CubicBezier;
 			_cancelAnimation();
 			if (_domChangeDebouncer) {
 				window.clearTimeout(_domChangeDebouncer);
-				_domChangeDebouncer = false;
+				_domChangeDebouncer = null;
 			}
 			for (i = 0, l = _timeouts.length; i < l; i = i + 1) {
 				window.clearTimeout(_timeouts[i]);
@@ -357,7 +402,7 @@ var FTScroller, CubicBezier;
 
 			// If this is currently tracked as a scrolling instance, clear the flag
 			if (_ftscrollerMoving && _ftscrollerMoving === _self) {
-				_ftscrollerMoving = false;
+				_ftscrollerMoving = null;
 				if (_instanceOptions.windowScrollingActiveFlag) {
 					window[_instanceOptions.windowScrollingActiveFlag] = false;
 				}
@@ -561,6 +606,12 @@ var FTScroller, CubicBezier;
 
 		/**
 		 * Continue a scroll as a result of an updated position
+		 *
+		 * @param {number} inputX
+		 * @param {number} inputY
+		 * @param {number} inputTime
+		 * @param {MouseEvent} rawEvent
+		 * @param {boolean} [scrollInterrupt]
 		 */
 		_updateScroll = function _updateScroll(inputX, inputY, inputTime, rawEvent, scrollInterrupt) {
 			var axis;
@@ -686,6 +737,9 @@ var FTScroller, CubicBezier;
 		 * Complete a scroll with a final event time if available (it may
 		 * not be, depending on the input type); this may continue the scroll
 		 * with a fling and/or bounceback depending on options.
+		 *
+		 * @param {number} inputTime
+		 * @param {MouseEvent} [rawEvent]
 		 */
 		_endScroll = function _endScroll(inputTime, rawEvent) {
 			if (!_isScrolling) {
@@ -702,7 +756,7 @@ var FTScroller, CubicBezier;
 
 			// Update flags
 			_isScrolling = false;
-			_ftscrollerMoving = false;
+			_ftscrollerMoving = null;
 			if (_instanceOptions.windowScrollingActiveFlag) {
 				window[_instanceOptions.windowScrollingActiveFlag] = false;
 			}
@@ -1257,6 +1311,9 @@ var FTScroller, CubicBezier;
 			}, 100);
 		};
 
+		/**
+		 * @param {boolean} [ignoreSnapScroll]
+		 */
 		_updateDimensions = function _updateDimensions(ignoreSnapScroll) {
 			var axis;
 
@@ -1268,7 +1325,7 @@ var FTScroller, CubicBezier;
 
 			if (_domChangeDebouncer) {
 				window.clearTimeout(_domChangeDebouncer);
-				_domChangeDebouncer = false;
+				_domChangeDebouncer = null;
 			}
 			var containerWidth, containerHeight, startAlignments;
 
@@ -1297,7 +1354,7 @@ var FTScroller, CubicBezier;
 			var rawScrollHeight = options.contentHeight || _contentParentNode.offsetHeight;
 			var scrollWidth = rawScrollWidth;
 			var scrollHeight = rawScrollHeight;
-			var targetPosition = { x: false, y: false };
+			var targetPosition = { x: -1, y: -1 };
 
 			// Update snap grid
 			if (!_snapGridSize.userX) {
@@ -1364,11 +1421,11 @@ var FTScroller, CubicBezier;
 					}
 				}
 			}
-			if (_instanceOptions.scrollingX && targetPosition.x !== false) {
+			if (_instanceOptions.scrollingX && targetPosition.x !== -1) {
 				_setAxisPosition('x', targetPosition.x, 0);
 				_baseScrollPosition.x = targetPosition.x;
 			}
-			if (_instanceOptions.scrollingY && targetPosition.y !== false) {
+			if (_instanceOptions.scrollingY && targetPosition.y !== -1) {
 				_setAxisPosition('y', targetPosition.y, 0);
 				_baseScrollPosition.y = targetPosition.y;
 			}
@@ -1448,6 +1505,12 @@ var FTScroller, CubicBezier;
 			}
 		};
 
+		/**
+		 * @param {string} axis
+		 * @param {number} position
+		 * @param {number} [animationDuration]
+		 * @param {CubicBezier} [animationBezier]
+		 */
 		_setAxisPosition = function _setAxisPosition(axis, position, animationDuration, animationBezier) {
 			var transitionCSSString;
 
@@ -1504,7 +1567,7 @@ var FTScroller, CubicBezier;
 					_eventListeners[eventName][i](eventObject);
 				} catch (error) {
 					if (window.console && window.console.error) {
-						window.console.error(error.message + ' (' + error.sourceURL + ', line ' + error.line + ')');
+						window.console.error(error.message + ' (' + error.sourceURL + ', line ' + error.lineNumber + ')');
 					}
 				}
 			}
@@ -1558,7 +1621,7 @@ var FTScroller, CubicBezier;
 		_startAnimation = function _startAnimation() {
 			if (_reqAnimationFrame) {
 				_cancelAnimation();
-				_animationFrameRequest = _reqAnimationFrame(_scheduleRender);
+				_animationFrameRequest = _reqAnimationFrame.call(window, _scheduleRender);
 			}
 		};
 
@@ -1572,7 +1635,7 @@ var FTScroller, CubicBezier;
 			var axis;
 
 			// Request the next update at once
-			_animationFrameRequest = _reqAnimationFrame(_scheduleRender);
+			_animationFrameRequest = _reqAnimationFrame.call(window, _scheduleRender);
 
 			// Perform the draw.
 			for (axis in _scrollableAxes) {
@@ -1861,7 +1924,7 @@ var FTScroller, CubicBezier;
 				_inputIdentifier = false;
 				_releaseInputCapture();
 				_isScrolling = false;
-				_ftscrollerMoving = false;
+				_ftscrollerMoving = null;
 				if (_instanceOptions.windowScrollingActiveFlag) {
 					window[_instanceOptions.windowScrollingActiveFlag] = false;
 				}
@@ -1973,7 +2036,7 @@ var FTScroller, CubicBezier;
 	 */
 	FTScroller.prototype.getPrependedHTML = function (excludeXAxis, excludeYAxis, hwAccelerationClass) {
 		if (!hwAccelerationClass) {
-			if (typeof FTScrollerOptions === 'object' && FTScrollerOptions.hwAccelerationClass) {
+			if (typeof FTScrollerOptions === 'object' && /** @expose */ FTScrollerOptions.hwAccelerationClass) {
 				hwAccelerationClass = FTScrollerOptions.hwAccelerationClass;
 			} else {
 				hwAccelerationClass = 'ftscroller_hwaccelerated';
@@ -2023,41 +2086,6 @@ var FTScroller, CubicBezier;
 
 		return output;
 	};
-}());
-
-
-/**
- * @license
- *
- * Copyright (C) 2008 Apple Inc. All Rights Reserved.
- * Copyright (C) 2010 David Aurelio. All Rights Reserved.
- * Copyright (C) 2010 uxebu Consulting Ltd. & Co. KG. All Rights Reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY APPLE INC., DAVID AURELIO, AND UXEBU
- * CONSULTING LTD. & CO. KG ``AS IS'' AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- * IN NO EVENT SHALL APPLE INC. OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
- * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
-
-(function () {
-	'use strict';
 
 	/**
 	 * Represents a two-dimensional cubic bezier curve with the starting
@@ -2065,25 +2093,31 @@ var FTScroller, CubicBezier;
 	 * have x and y coordinates between 0 and 1.
 	 *
 	 * This type of bezier curves can be used as CSS transform timing functions.
+	 *
+	 * @constructor
+	 * @param {number} [p1x]
+	 * @param {number} [p1y]
+	 * @param {number} [p2x]
+	 * @param {number} [p2y]
 	 */
-	CubicBezier = function (p1x, p1y, p2x, p2y) {
+	function CubicBezier(p1x, p1y, p2x, p2y) {
 		if (!(p1x >= 0 && p1x <= 1)) {
-			throw new RangeError('"p1x" must be a number between 0 and 1. ' + 'Got ' + p1x + 'instead.');
+			throw new RangeError('"p1x" must be a number between 0 and 1. ' + 'Got ' + p1x + ' instead.');
 		}
 		if (!(p1y >= 0 && p1y <= 1)) {
-			throw new RangeError('"p1y" must be a number between 0 and 1. ' + 'Got ' + p1y + 'instead.');
+			throw new RangeError('"p1y" must be a number between 0 and 1. ' + 'Got ' + p1y + ' instead.');
 		}
 		if (!(p2x >= 0 && p2x <= 1)) {
-			throw new RangeError('"p2x" must be a number between 0 and 1. ' + 'Got ' + p2x + 'instead.');
+			throw new RangeError('"p2x" must be a number between 0 and 1. ' + 'Got ' + p2x + ' instead.');
 		}
 		if (!(p2y >= 0 && p2y <= 1)) {
-			throw new RangeError('"p2y" must be a number between 0 and 1. ' + 'Got ' + p2y + 'instead.');
+			throw new RangeError('"p2y" must be a number between 0 and 1. ' + 'Got ' + p2y + ' instead.');
 		}
 
 		// Control points
 		this._p1 = { x: p1x, y: p1y };
 		this._p2 = { x: p2x, y: p2y };
-	};
+	}
 
 	CubicBezier.prototype._getCoordinateForT = function (t, p1, p2) {
 		var c = 3 * p1,
@@ -2253,7 +2287,7 @@ var FTScroller, CubicBezier;
 	 *     t === 1 or t === 0 are the starting/ending points of the curve, so no
 	 *     division is needed.
 	 *
-	 * @returns {CubicBezier[]} Returns an array containing two bezier curves
+	 * @returns {Array.<CubicBezier>} Returns an array containing two bezier curves
 	 *     to the left and the right of t.
 	 */
 	CubicBezier.prototype.divideAtT = function (t) {
@@ -2360,4 +2394,5 @@ var FTScroller, CubicBezier;
 	CubicBezier.easeInOut = function () {
 		return new CubicBezier(0.42, 0, 0.58, 1.0);
 	};
+
 }());
