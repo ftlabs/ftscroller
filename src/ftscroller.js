@@ -37,24 +37,20 @@ var FTScroller, CubicBezier;
 	var _canClearSelection = (window.Selection && window.Selection.prototype.removeAllRanges);
 
 	// Determine the browser engine and prefix
-	var _browserEngine, _vendorCSSPrefix, _vendorStylePropertyPrefix, _vendorTransformLookup;
+	var _vendorCSSPrefix, _vendorStylePropertyPrefix, _vendorTransformLookup;
 	if (window.opera && Object.prototype.toString.call(window.opera) === '[object Opera]') {
-		_browserEngine = 'presto';
 		_vendorCSSPrefix = 'o';
 		_vendorStylePropertyPrefix = 'O';
 		_vendorTransformLookup = 'OTransform';
-	} else if (document.documentElement.style.hasOwnProperty('MozAppearance')) {
-		_browserEngine = 'gecko';
+	} else if (document.documentElement.style.MozTransform !== undefined) {
 		_vendorCSSPrefix = 'moz';
-		_vendorStylePropertyPrefix = 'moz';
+		_vendorStylePropertyPrefix = 'Moz';
 		_vendorTransformLookup = '-moz-transform';
-	} else if (document.documentElement.style.hasOwnProperty('WebkitAppearance')) {
-		_browserEngine = 'webkit';
+	} else if (document.documentElement.style.webkitTransform !== undefined) {
 		_vendorCSSPrefix = 'webkit';
 		_vendorStylePropertyPrefix = 'webkit';
 		_vendorTransformLookup = '-webkit-transform';
 	} else if (typeof navigator.cpuClass === 'string') {
-		_browserEngine = 'trident';
 		_vendorCSSPrefix = 'ms';
 		_vendorStylePropertyPrefix = 'ms';
 		_vendorTransformLookup = '-ms-transform';
