@@ -45,7 +45,7 @@ var FTScroller, CubicBezier;
 	} else if (document.documentElement.style.MozTransform !== undefined) {
 		_vendorCSSPrefix = 'moz';
 		_vendorStylePropertyPrefix = 'Moz';
-		_vendorTransformLookup = '-moz-transform';
+		_vendorTransformLookup = 'MozTransform';
 	} else if (document.documentElement.style.webkitTransform !== undefined) {
 		_vendorCSSPrefix = 'webkit';
 		_vendorStylePropertyPrefix = 'webkit';
