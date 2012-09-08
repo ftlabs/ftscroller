@@ -266,6 +266,9 @@ var FTScroller, CubicBezier;
 			'segmentdidchange': []
 		};
 
+		// MutationObserver instance, when supported and if DOM change sniffing is enabled
+		var _mutationObserver;
+
 
 		/* Parsing supplied options */
 
@@ -1594,6 +1597,7 @@ var FTScroller, CubicBezier;
 		 * Register or unregister event handlers as appropriate
 		 */
 		_toggleEventHandlers = function _toggleEventHandlers(enable) {
+			var MutationObserver;
 
 			// Only remove the event if the node exists (DOM elements can go away)
 			if (!_containerNode) {
@@ -1631,14 +1635,36 @@ var FTScroller, CubicBezier;
 			if (enable) {
 				_contentParentNode.addEventListener('focus', _childFocused, true);
 				if (_instanceOptions.updateOnChanges) {
-					_contentParentNode.addEventListener('DOMSubtreeModified', _domChanged, true);
+
+					// Try and reuse the old, disconnected observer instance if available
+					// Otherwise, check for support before proceeding
+					if (!_mutationObserver) {
+						MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+						if (MutationObserver) {
+							_mutationObserver = new MutationObserver(_domChanged);
+						}
+					}
+
+					if (_mutationObserver) {
+						_mutationObserver.observe(_contentParentNode, {
+							childList: true,
+							characterData: true,
+							subtree: true
+						});
+					} else {
+						_contentParentNode.addEventListener('DOMSubtreeModified', _domChanged, true);
+					}
 				}
 				if (_instanceOptions.updateOnWindowResize) {
 					window.addEventListener('resize', _domChanged, true);
 				}
 			} else {
 				_contentParentNode.removeEventListener('focus', _childFocused, true);
-				_contentParentNode.removeEventListener('DOMSubtreeModified', _domChanged, true);
+				if (_mutationObserver) {
+					_mutationObserver.disconnect();
+				} else {
+					_contentParentNode.removeEventListener('DOMSubtreeModified', _domChanged, true);
+				}
 				window.removeEventListener('resize', _domChanged, true);
 			}
 
