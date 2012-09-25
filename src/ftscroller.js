@@ -1664,6 +1664,7 @@ var FTScroller, CubicBezier;
 					} else {
 						_contentParentNode.addEventListener('DOMSubtreeModified', _domChanged, true);
 					}
+					_contentParentNode.addEventListener('load', _domChanged, true);
 				}
 				if (_instanceOptions.updateOnWindowResize) {
 					window.addEventListener('resize', _domChanged, true);
@@ -1675,6 +1676,7 @@ var FTScroller, CubicBezier;
 				} else {
 					_contentParentNode.removeEventListener('DOMSubtreeModified', _domChanged, true);
 				}
+				_contentParentNode.removeEventListener('load', _domChanged, true);
 				window.removeEventListener('resize', _domChanged, true);
 			}
 
