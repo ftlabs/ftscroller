@@ -1403,12 +1403,22 @@ var FTScroller, CubicBezier;
 		_updateElementPosition = function _updateElementPosition() {
 			var axis, computedStyle, splitStyle;
 
-			// Retrieve the current position of each active axis
+			// Retrieve the current position of each active axis.
+			// Custom parsing is used instead of native matrix support for speed and for
+			// backwards compatibility.
 			for (axis in _scrollableAxes) {
 				if (_scrollableAxes.hasOwnProperty(axis)) {
 					computedStyle = window.getComputedStyle(_scrollNodes[axis], null)[_vendorTransformLookup];
 					splitStyle = computedStyle.split(', ');
-					_baseScrollPosition[axis] = parseInt(splitStyle[(axis === 'y') ? 5 : 4], 10);
+					
+					// For 2d-style transforms, pull out elements four or five
+					if (splitStyle.length === 6) {
+						_baseScrollPosition[axis] = parseInt(splitStyle[(axis === 'y') ? 5 : 4], 10);
+
+					// For 3d-style transforms, pull out elements twelve or thirteen
+					} else {
+						_baseScrollPosition[axis] = parseInt(splitStyle[(axis === 'y') ? 12 : 13], 10);
+					}
 					_lastScrollPosition[axis] = _baseScrollPosition[axis];
 				}
 			}
