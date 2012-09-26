@@ -33,6 +33,11 @@ var FTScroller, CubicBezier;
 	var _trackPointerEvents = window.navigator.msPointerEnabled;
 	var _trackTouchEvents = !_trackPointerEvents && document.hasOwnProperty('ontouchstart');
 
+	// Determine whether to use modern hardware acceleration rules or dynicamic/toggleable rules.
+	// Certain older browsers - particularly Android browsers - have problems with hardware
+	// acceleration, so being able to toggle the behaviour dynamically via a CSS cascade is desirable.
+	var _useToggleableHardwareAcceleration = !window.hasOwnProperty('ArrayBuffer');
+
 	// Feature detection
 	var _canClearSelection = (window.Selection && window.Selection.prototype.removeAllRanges);
 
@@ -59,8 +64,9 @@ var FTScroller, CubicBezier;
 	// Style prefixes
 	var _transformProperty = _vendorStylePropertyPrefix + 'Transform';
 	var _transitionProperty = _vendorStylePropertyPrefix + 'Transition';
+	var _translateRulePrefix = _useToggleableHardwareAcceleration ? 'translate(' : 'translate3d(';
 	var _transformPrefixes = { x: '', y: '0,' };
-	var _transformSuffixes = { x: ',0', y: '' };
+	var _transformSuffixes = { x: ',0' + (_useToggleableHardwareAcceleration ? ')' : ',0)'), y: (_useToggleableHardwareAcceleration ? ')' : ',0)') };
 
 	// Constants.  Note that the bezier curve should be changed along with the friction!
 	var _kFriction = 0.998;
@@ -70,15 +76,23 @@ var FTScroller, CubicBezier;
 	(function () {
 		var stylesheetContainerNode = document.getElementsByTagName('head')[0] || document.documentElement;
 		var newStyleNode = document.createElement('style');
+		var hardwareAccelerationRule;
 		var _styleText;
 		newStyleNode.type = 'text/css';
+
+		// Determine the hardware acceleration logic to use
+		if (_useToggleableHardwareAcceleration) {
+			hardwareAccelerationRule = '-' + _vendorCSSPrefix + '-transform-style: preserve-3d;';
+		} else {
+			hardwareAccelerationRule = '-' + _vendorCSSPrefix + '-transform: translateZ(0);';
+		}
 
 		// Add our rules
 		_styleText = [
 			'.ftscroller_scrolling { -' + _vendorCSSPrefix + '-user-select: none; cursor: all-scroll !important }',
 			'.ftscroller_container { overflow: hidden; position: relative; max-height: 100%; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); -ms-touch-action: none }',
-			'.ftscroller_hwaccelerated { -' + _vendorCSSPrefix + '-backface-visibility: hidden; }',
-			'.ftscroller_x, .ftscroller_y { -' + _vendorCSSPrefix + '-transform: translate(0,0); position: relative; min-width: 100%; min-height: 100%; overflow: hidden }',
+			'.ftscroller_hwaccelerated { ' + hardwareAccelerationRule  + ' }',
+			'.ftscroller_x, .ftscroller_y { position: relative; min-width: 100%; min-height: 100%; overflow: hidden }',
 			'.ftscroller_x { display: inline-block }',
 			'.ftscroller_scrollbar { pointer-events: none; position: absolute; width: 5px; height: 5px; border: 1px solid rgba(255, 255, 255, 0.15); -webkit-border-radius: 3px; border-radius: 6px; opacity: 0; -' + _vendorCSSPrefix + '-transition: opacity 350ms; z-index: 10 }',
 			'.ftscroller_scrollbarx { bottom: 2px; left: 2px }',
@@ -174,11 +188,10 @@ var FTScroller, CubicBezier;
 			// the variable while scrolling
 			windowScrollingActiveFlag: undefined,
 
-			// Instead of using translate3d for transforms, a normal translate
-			// is used, and classes used to trigger hardware acceleration on
-			// platforms which support it; this is to allow CSS inheritance to
-			// be used to allow easy per-device or even dynamic disabling
-			// and re-enabling of 3d acceleration for devices with 3d issues.
+			// Instead of always using translate3d for transforms, a mix of translate3d
+			// and translate with a hardware acceleration class used to trigger acceleration
+			// is used; this is to allow CSS inheritance to be used to allow dynamic
+			// disabling of backing layers on older platforms.
 			hwAccelerationClass: 'ftscroller_hwaccelerated',
 
 			// While use of requestAnimationFrame is highly recommended on platforms
@@ -1410,7 +1423,7 @@ var FTScroller, CubicBezier;
 				if (_scrollableAxes.hasOwnProperty(axis)) {
 					computedStyle = window.getComputedStyle(_scrollNodes[axis], null)[_vendorTransformLookup];
 					splitStyle = computedStyle.split(', ');
-					
+
 					// For 2d-style transforms, pull out elements four or five
 					if (splitStyle.length === 6) {
 						_baseScrollPosition[axis] = parseInt(splitStyle[(axis === 'y') ? 5 : 4], 10);
@@ -1484,9 +1497,9 @@ var FTScroller, CubicBezier;
 			}
 
 			// Update the positions
-			_scrollNodes[axis].style[_transformProperty] = 'translate(' + _transformPrefixes[axis] + position + 'px' + _transformSuffixes[axis] + ')';
+			_scrollNodes[axis].style[_transformProperty] = _translateRulePrefix + _transformPrefixes[axis] + position + 'px' + _transformSuffixes[axis];
 			if (_instanceOptions.scrollbars) {
-				_scrollbarNodes[axis].style[_transformProperty] = 'translate(' + _transformPrefixes[axis] + (-position * _metrics.container[axis] / _metrics.content[axis]) + 'px' + _transformSuffixes[axis] + ')';
+				_scrollbarNodes[axis].style[_transformProperty] = _translateRulePrefix + _transformPrefixes[axis] + (-position * _metrics.container[axis] / _metrics.content[axis]) + 'px' + _transformSuffixes[axis];
 			}
 
 			// Update the recorded position if there's no duration
