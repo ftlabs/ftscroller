@@ -1430,7 +1430,7 @@ var FTScroller, CubicBezier;
 
 					// For 3d-style transforms, pull out elements twelve or thirteen
 					} else {
-						_baseScrollPosition[axis] = parseInt(splitStyle[(axis === 'y') ? 12 : 13], 10);
+						_baseScrollPosition[axis] = parseInt(splitStyle[(axis === 'y') ? 13 : 12], 10);
 					}
 					_lastScrollPosition[axis] = _baseScrollPosition[axis];
 				}
