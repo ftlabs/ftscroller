@@ -16,9 +16,11 @@ The script must be loaded prior to instantiating a scroller on any element of th
 To create a scroller, with a few minimal options:
 
 ```js
-var containerel, scroller;
-containerel = document.getElementById('scrollcontainer');
-var scroller = new FTScroller(containerel, {
+var containerElement, scroller;
+
+containerElement = document.getElementById('scrollcontainer');
+
+scroller = new FTScroller(containerElement, {
 	scrollbars: false,
 	scrollingX: false
 });
