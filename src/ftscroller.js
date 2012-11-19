@@ -631,6 +631,10 @@ var FTScroller, CubicBezier;
 						&& !scrollInterrupt
 						&& (!_scrollableAxes.x || !gesture.x || targetPositions.x > 0 || targetPositions.x < _metrics.scrollEnd.x)
 						&& (!_scrollableAxes.y || !gesture.y || targetPositions.y > 0 || targetPositions.y < _metrics.scrollEnd.y)) {
+
+					// Prevent the original click now that scrolling would be triggered
+					_preventClick = true;
+
 					return;
 				}
 
