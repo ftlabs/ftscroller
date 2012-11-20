@@ -872,6 +872,16 @@ var FTScroller, CubicBezier;
 					// Determine a target fling position
 					flingPosition = Math.floor(_lastScrollPosition[axis] + flingDistance);
 
+					// If bouncing is disabled, and the last scroll position and fling position are both at a bound,
+					// reset the fling position to the bound
+					if (!_instanceOptions.bouncing) {
+						if (_lastScrollPosition[axis] === 0 && flingPosition > 0) {
+							flingPosition = 0;
+						} else if (_lastScrollPosition[axis] === _metrics.scrollEnd[axis] && flingPosition < _lastScrollPosition[axis]) {
+							flingPosition = _lastScrollPosition[axis];
+						}
+					}
+
 					// In paginated snapping mode, determine the page to snap to - maximum
 					// one page in either direction from the current page.
 					if (_instanceOptions.paginatedSnap && _instanceOptions.snapping) {
