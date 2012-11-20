@@ -1670,7 +1670,19 @@ var FTScroller, CubicBezier;
 			}
 			_containerNode._ftscrollerToggle('DOMMouseScroll', _onMouseScroll, false);
 			_containerNode._ftscrollerToggle('mousewheel', _onMouseScroll, false);
-			_containerNode._ftscrollerToggle('click', _onClick, true);
+
+			// Add a click listener.  On IE, add the listener to the document, to allow
+			// clicks to be cancelled if a scroll ends outside the bounds of the container; on
+			// other platforms, add to the container node.
+			if (_trackPointerEvents) {
+				if (enable) {
+					document.addEventListener('click', _onClick, true);
+				} else {
+					document.removeEventListener('click', _onClick, true);
+				}
+			} else {
+				_containerNode._ftscrollerToggle('click', _onClick, true);
+			}
 
 			// Watch for changes inside the contained element to update bounds - de-bounced slightly.
 			if (enable) {
@@ -1864,6 +1876,7 @@ var FTScroller, CubicBezier;
 			// this is safe even in IE10 as this is always a "true" event, never a window.event.
 			clickEvent.preventDefault();
 			clickEvent.stopPropagation();
+			_preventClick = false;
 			return false;
 		};
 
