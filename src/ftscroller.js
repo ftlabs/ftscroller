@@ -33,7 +33,7 @@ var FTScroller, CubicBezier;
 	var _trackPointerEvents = window.navigator.msPointerEnabled;
 	var _trackTouchEvents = !_trackPointerEvents && document.hasOwnProperty('ontouchstart');
 
-	// Determine whether to use modern hardware acceleration rules or dynicamic/toggleable rules.
+	// Determine whether to use modern hardware acceleration rules or dynamic/toggleable rules.
 	// Certain older browsers - particularly Android browsers - have problems with hardware
 	// acceleration, so being able to toggle the behaviour dynamically via a CSS cascade is desirable.
 	var _useToggleableHardwareAcceleration = !window.hasOwnProperty('ArrayBuffer');
@@ -41,29 +41,39 @@ var FTScroller, CubicBezier;
 	// Feature detection
 	var _canClearSelection = (window.Selection && window.Selection.prototype.removeAllRanges);
 
-	// Determine the browser engine and prefix
+	// Determine the browser engine and prefix, trying to use the unprefixed version where available.
 	var _vendorCSSPrefix, _vendorStylePropertyPrefix, _vendorTransformLookup;
-	if (window.opera && Object.prototype.toString.call(window.opera) === '[object Opera]') {
-		_vendorCSSPrefix = 'o';
+	if (document.createElement('div').style.transform !== undefined) {
+		_vendorCSSPrefix = '';
+		_vendorStylePropertyPrefix = '';
+		_vendorTransformLookup = 'transform';
+	} else if (window.opera && Object.prototype.toString.call(window.opera) === '[object Opera]') {
+		_vendorCSSPrefix = '-o-';
 		_vendorStylePropertyPrefix = 'O';
 		_vendorTransformLookup = 'OTransform';
 	} else if (document.documentElement.style.MozTransform !== undefined) {
-		_vendorCSSPrefix = 'moz';
+		_vendorCSSPrefix = '-moz-';
 		_vendorStylePropertyPrefix = 'Moz';
 		_vendorTransformLookup = 'MozTransform';
 	} else if (document.documentElement.style.webkitTransform !== undefined) {
-		_vendorCSSPrefix = 'webkit';
+		_vendorCSSPrefix = '-webkit-';
 		_vendorStylePropertyPrefix = 'webkit';
 		_vendorTransformLookup = '-webkit-transform';
 	} else if (typeof navigator.cpuClass === 'string') {
-		_vendorCSSPrefix = 'ms';
+		_vendorCSSPrefix = '-ms-';
 		_vendorStylePropertyPrefix = 'ms';
 		_vendorTransformLookup = '-ms-transform';
 	}
 
+	// If hardware acceleration is using the standard path, but perspective doesn't seem to be supported,
+	// 3D transforms likely aren't supported either
+	if (!_useToggleableHardwareAcceleration && document.createElement('div').style[_vendorStylePropertyPrefix + (_vendorStylePropertyPrefix ? 'P' : 'p') + 'erspective'] === undefined) {
+		_useToggleableHardwareAcceleration = true;
+	}
+
 	// Style prefixes
-	var _transformProperty = _vendorStylePropertyPrefix + 'Transform';
-	var _transitionProperty = _vendorStylePropertyPrefix + 'Transition';
+	var _transformProperty = _vendorStylePropertyPrefix + (_vendorStylePropertyPrefix ? 'T' : 't') + 'ransform';
+	var _transitionProperty = _vendorStylePropertyPrefix + (_vendorStylePropertyPrefix ? 'T' : 't') + 'ransition';
 	var _translateRulePrefix = _useToggleableHardwareAcceleration ? 'translate(' : 'translate3d(';
 	var _transformPrefixes = { x: '', y: '0,' };
 	var _transformSuffixes = { x: ',0' + (_useToggleableHardwareAcceleration ? ')' : ',0)'), y: (_useToggleableHardwareAcceleration ? ')' : ',0)') };
@@ -82,23 +92,23 @@ var FTScroller, CubicBezier;
 
 		// Determine the hardware acceleration logic to use
 		if (_useToggleableHardwareAcceleration) {
-			hardwareAccelerationRule = '-' + _vendorCSSPrefix + '-transform-style: preserve-3d;';
+			hardwareAccelerationRule = _vendorCSSPrefix + 'transform-style: preserve-3d;';
 		} else {
-			hardwareAccelerationRule = '-' + _vendorCSSPrefix + '-transform: translateZ(0);';
+			hardwareAccelerationRule = _vendorCSSPrefix + 'transform: translateZ(0);';
 		}
 
 		// Add our rules
 		_styleText = [
-			'.ftscroller_scrolling { -' + _vendorCSSPrefix + '-user-select: none; cursor: all-scroll !important }',
+			'.ftscroller_scrolling { ' + _vendorCSSPrefix + 'user-select: none; cursor: all-scroll !important }',
 			'.ftscroller_container { overflow: hidden; position: relative; max-height: 100%; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); -ms-touch-action: none }',
 			'.ftscroller_hwaccelerated { ' + hardwareAccelerationRule  + ' }',
 			'.ftscroller_x, .ftscroller_y { position: relative; min-width: 100%; min-height: 100%; overflow: hidden }',
 			'.ftscroller_x { display: inline-block }',
-			'.ftscroller_scrollbar { pointer-events: none; position: absolute; width: 5px; height: 5px; border: 1px solid rgba(255, 255, 255, 0.15); -webkit-border-radius: 3px; border-radius: 6px; opacity: 0; -' + _vendorCSSPrefix + '-transition: opacity 350ms; z-index: 10 }',
+			'.ftscroller_scrollbar { pointer-events: none; position: absolute; width: 5px; height: 5px; border: 1px solid rgba(255, 255, 255, 0.15); -webkit-border-radius: 3px; border-radius: 6px; opacity: 0; ' + _vendorCSSPrefix + 'transition: opacity 350ms; z-index: 10 }',
 			'.ftscroller_scrollbarx { bottom: 2px; left: 2px }',
 			'.ftscroller_scrollbary { right: 2px; top: 2px }',
 			'.ftscroller_scrollbarinner { height: 100%; background: rgba(0,0,0,0.5); -webkit-border-radius: 2px; border-radius: 4px / 6px }',
-			'.ftscroller_scrolling .ftscroller_scrollbar { opacity: 1; -' + _vendorCSSPrefix + '-transition: none; -o-transition: all 0 none }',
+			'.ftscroller_scrolling .ftscroller_scrollbar { opacity: 1; ' + _vendorCSSPrefix + 'transition: none; -o-transition: all 0 none }',
 			'.ftscroller_scrolling .ftscroller_container .ftscroller_scrollbar { opacity: 0 }'
 		];
 
@@ -1503,7 +1513,7 @@ var FTScroller, CubicBezier;
 					animationBezier = _kFlingTruncatedBezier;
 				}
 
-				transitionCSSString = '-' + _vendorCSSPrefix + '-transform ' + animationDuration + 'ms ' + animationBezier.toString();
+				transitionCSSString = _vendorCSSPrefix + 'transform ' + animationDuration + 'ms ' + animationBezier.toString();
 			} else {
 				transitionCSSString = '';
 			}
