@@ -1868,7 +1868,10 @@ var FTScroller, CubicBezier;
 		 * Prevents click actions if appropriate
 		 */
 		_onClick = function _onClick(clickEvent) {
-			if (!_preventClick) {
+
+			// If a scroll action hasn't resulted in the next scroll being prevented, and a scroll
+			// isn't currently in progress with a different identifier, allow the click
+			if (!_preventClick && !_inputIdentifier) {
 				return true;
 			}
 
