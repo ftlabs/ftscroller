@@ -942,7 +942,7 @@ var FTScroller, CubicBezier;
 							baseFlingComponent = flingDistance - beyondBoundsFlingDistance;
 
 							// Determine the time proportion the original bound is along the fling curve
-							if (!flingDistance) {
+							if (!flingDistance || !flingDuration) {
 								timeProportion = 0;
 							} else {
 								timeProportion = flingBezier._getCoordinateForT(flingBezier.getTForY((flingDistance - beyondBoundsFlingDistance) / flingDistance, 1 / flingDuration), flingBezier._p1.x, flingBezier._p2.x);
