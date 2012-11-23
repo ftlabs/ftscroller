@@ -714,6 +714,7 @@ var FTScroller, CubicBezier;
 		 * with a fling and/or bounceback depending on options.
 		 */
 		_endScroll = function _endScroll(inputTime, rawEvent) {
+			_inputIdentifier = false;
 			if (!_isScrolling) {
 				if (!_snapScroll() && _scrollbarsVisible) {
 					_finalizeScroll();
@@ -1791,7 +1792,6 @@ var FTScroller, CubicBezier;
 
 			// Complete the scroll.  Note that touch end events
 			// don't capture coordinates.
-			_inputIdentifier = false;
 			_endScroll(endEvent.timeStamp, endEvent);
 		};
 
@@ -1838,7 +1838,6 @@ var FTScroller, CubicBezier;
 				_containerNode.releaseCapture();
 			}
 
-			_inputIdentifier = false;
 			_endScroll(endEvent.timeStamp, endEvent);
 		};
 
@@ -1866,15 +1865,12 @@ var FTScroller, CubicBezier;
 				return;
 			}
 
-			_inputIdentifier = false;
 			_endScroll(endEvent.timeStamp, endEvent);
 		};
 		_onPointerCancel = function _onPointerCancel(endEvent) {
-			_inputIdentifier = false;
 			_endScroll(endEvent.timeStamp, endEvent);
 		};
 		_onPointerCaptureEnd = function _onPointerCaptureEnd(event) {
-			_inputIdentifier = false;
 			_endScroll(event.timeStamp, event);
 		};
 
