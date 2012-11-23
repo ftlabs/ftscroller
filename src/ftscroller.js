@@ -1702,7 +1702,7 @@ var FTScroller, CubicBezier;
 					// Try and reuse the old, disconnected observer instance if available
 					// Otherwise, check for support before proceeding
 					if (!_mutationObserver) {
-						MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+						MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window[_vendorStylePropertyPrefix + 'MutationObserver'];
 						if (MutationObserver) {
 							_mutationObserver = new MutationObserver(_domChanged);
 						}
@@ -1715,7 +1715,12 @@ var FTScroller, CubicBezier;
 							subtree: true
 						});
 					} else {
-						_contentParentNode.addEventListener('DOMSubtreeModified', _domChanged, true);
+						_contentParentNode.addEventListener('DOMSubtreeModified', function (e) {
+							if (e && e.srcElement === _contentParentNode) {
+								return;
+							}
+							_domChanged();
+						}, true);
 					}
 					_contentParentNode.addEventListener('load', _domChanged, true);
 				}
@@ -1889,7 +1894,9 @@ var FTScroller, CubicBezier;
 			// this is safe even in IE10 as this is always a "true" event, never a window.event.
 			clickEvent.preventDefault();
 			clickEvent.stopPropagation();
-			_preventClick = false;
+			if (!_inputIdentifier) {
+				_preventClick = false;
+			}
 			return false;
 		};
 
