@@ -1668,19 +1668,19 @@ var FTScroller, CubicBezier;
 				_containerNode._ftscrollerToggle('MSPointerUp', _onPointerUp, true);
 				_containerNode._ftscrollerToggle('MSPointerCancel', _onPointerCancel, true);
 			} else if (_trackTouchEvents) {
-				_containerNode._ftscrollerToggle('touchstart', _onTouchStart, false);
-				_containerNode._ftscrollerToggle('touchmove', _onTouchMove, false);
-				_containerNode._ftscrollerToggle('touchend', _onTouchEnd, false);
-				_containerNode._ftscrollerToggle('touchcancel', _onTouchEnd, false);
+				_containerNode._ftscrollerToggle('touchstart', _onTouchStart);
+				_containerNode._ftscrollerToggle('touchmove', _onTouchMove);
+				_containerNode._ftscrollerToggle('touchend', _onTouchEnd);
+				_containerNode._ftscrollerToggle('touchcancel', _onTouchEnd);
 			} else {
-				_containerNode._ftscrollerToggle('mousedown', _onMouseDown, false);
+				_containerNode._ftscrollerToggle('mousedown', _onMouseDown);
 				if (!enable) {
-					document.removeEventListener('mousemove', _onMouseMove, true);
-					document.removeEventListener('mouseup', _onMouseUp, true);
+					document.removeEventListener('mousemove', _onMouseMove);
+					document.removeEventListener('mouseup', _onMouseUp);
 				}
 			}
-			_containerNode._ftscrollerToggle('DOMMouseScroll', _onMouseScroll, false);
-			_containerNode._ftscrollerToggle('mousewheel', _onMouseScroll, false);
+			_containerNode._ftscrollerToggle('DOMMouseScroll', _onMouseScroll);
+			_containerNode._ftscrollerToggle('mousewheel', _onMouseScroll);
 
 			// Add a click listener.  On IE, add the listener to the document, to allow
 			// clicks to be cancelled if a scroll ends outside the bounds of the container; on
@@ -1748,6 +1748,8 @@ var FTScroller, CubicBezier;
 		_onTouchStart = function _onTouchStart(startEvent) {
 			var i, l, touchEvent;
 
+			startEvent.stopPropagation();
+
 			// If a touch is already active, ensure that the index
 			// is mapped to the correct finger, and return.
 			if (_inputIdentifier) {
@@ -1799,7 +1801,7 @@ var FTScroller, CubicBezier;
 		 * Mouse event handlers
 		 */
 		_onMouseDown = function _onMouseDown(startEvent) {
-
+			startEvent.stopPropagation();
 			// Don't track the right mouse buttons, or a context menu
 			if ((startEvent.button && startEvent.button === 2) || startEvent.ctrlKey) {
 				return;
