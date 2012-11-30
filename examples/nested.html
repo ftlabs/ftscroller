@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+	<title>FT scroller demo: nested scrollers</title>
+	<style>
+
+		/* Styles not relevant to scrolling (just to make the demo look neat and tidy) */
+		body { font-family: sans-serif; -webkit-text-size-adjust: 100% }
+		#scrollable section:nth-child(2n) { background-color: #eee;}
+
+		/* Set the size of the scroller.  Visible border to make the demo easier to understand */
+		#scrollable { white-space: nowrap; width: 600px; height: 400px; border: 1px solid gray; overflow: hidden }
+
+		/* Style each 'page' to be the same size and join together into a long horizontal strip.  Use display: table on the section wrapper to get rid of whitespace between the inline-blocks. */
+		#sectionwrapper { width: 3600px; display: table }
+		#sectionwrapper > section { width: 600px; height: 400px; display: inline-block; vertical-align: top;}
+		#sectionwrapper > section > div { padding: 50px; overflow: hidden; white-space: normal;}
+
+		#nested { width: 300px; height: 150px; border: 1px dotted #CCC; overflow: hidden; white-space: nowrap; }
+		#nestedwrapper { width: 600px; display: table }
+		#nestedwrapper section { width: 300px; height: 150px; display: inline-block; }
+
+	</style>
+</head>
+<body>
+	<div id='scrollable'>
+		<div id='sectionwrapper'>
+			<section>
+				<div>
+					<p>This page demonstrates a scroller within a scroller.</p>
+					
+					<div id='nested'>
+						<div id='nestedwrapper'>	
+							<section>
+								This is a nested scroller
+							</section>
+							<section>
+								Section 2 in the nested scroller
+							</section>
+						</div>
+					</div>
+
+				</div>
+
+			</section>
+			<section><div>Page 2</div></section>
+			<section><div>Page 3</div></section>
+		</div>
+	</div>
+
+	<!--Include FT Scroller source (can be included at any point as long as it's loaded before being used)-->
+	<script src='../src/ftscroller.js'></script>
+
+	<!--Set up the scroller-->
+	<script>
+		var scroller = new FTScroller(document.getElementById('scrollable'), {
+			scrollingY: false,
+			snapping: true,
+			paginatedSnap: true,
+			scrollbars: false
+		});
+		var nestedScroller = new FTScroller(document.getElementById('nested'), {
+			scrollingY: false,
+			snapping: true,
+			paginatedSnap: true,
+			scrollbars: false
+		});
+
+	</script>
+</body>
+</html>

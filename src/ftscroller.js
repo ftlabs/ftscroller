@@ -1668,12 +1668,12 @@ var FTScroller, CubicBezier;
 				_containerNode._ftscrollerToggle('MSPointerUp', _onPointerUp, true);
 				_containerNode._ftscrollerToggle('MSPointerCancel', _onPointerCancel, true);
 			} else if (_trackTouchEvents) {
-				_containerNode._ftscrollerToggle('touchstart', _onTouchStart, true);
-				_containerNode._ftscrollerToggle('touchmove', _onTouchMove, true);
-				_containerNode._ftscrollerToggle('touchend', _onTouchEnd, true);
-				_containerNode._ftscrollerToggle('touchcancel', _onTouchEnd, true);
+				_containerNode._ftscrollerToggle('touchstart', _onTouchStart, false);
+				_containerNode._ftscrollerToggle('touchmove', _onTouchMove, false);
+				_containerNode._ftscrollerToggle('touchend', _onTouchEnd, false);
+				_containerNode._ftscrollerToggle('touchcancel', _onTouchEnd, false);
 			} else {
-				_containerNode._ftscrollerToggle('mousedown', _onMouseDown, true);
+				_containerNode._ftscrollerToggle('mousedown', _onMouseDown, false);
 				if (!enable) {
 					document.removeEventListener('mousemove', _onMouseMove, true);
 					document.removeEventListener('mouseup', _onMouseUp, true);
