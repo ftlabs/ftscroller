@@ -1748,8 +1748,6 @@ var FTScroller, CubicBezier;
 		_onTouchStart = function _onTouchStart(startEvent) {
 			var i, l, touchEvent;
 
-			startEvent.stopPropagation();
-
 			// If a touch is already active, ensure that the index
 			// is mapped to the correct finger, and return.
 			if (_inputIdentifier) {
@@ -1801,7 +1799,6 @@ var FTScroller, CubicBezier;
 		 * Mouse event handlers
 		 */
 		_onMouseDown = function _onMouseDown(startEvent) {
-			startEvent.stopPropagation();
 			// Don't track the right mouse buttons, or a context menu
 			if ((startEvent.button && startEvent.button === 2) || startEvent.ctrlKey) {
 				return;
@@ -1813,8 +1810,8 @@ var FTScroller, CubicBezier;
 			}
 
 			// Add move & up handlers to the *document* to allow handling outside the element
-			document.addEventListener('mousemove', _onMouseMove, true);
-			document.addEventListener('mouseup', _onMouseUp, true);
+			document.addEventListener('mousemove', _onMouseMove);
+			document.addEventListener('mouseup', _onMouseUp);
 
 			_inputIdentifier = startEvent.button || 1;
 			_inputIndex = 0;
@@ -1832,8 +1829,8 @@ var FTScroller, CubicBezier;
 				return;
 			}
 
-			document.removeEventListener('mousemove', _onMouseMove, true);
-			document.removeEventListener('mouseup', _onMouseUp, true);
+			document.removeEventListener('mousemove', _onMouseMove);
+			document.removeEventListener('mouseup', _onMouseUp);
 
 			// Release capture if possible
 			if (_containerNode.releaseCapture) {
