@@ -72,6 +72,9 @@ var FTScroller, CubicBezier;
 	var _kFriction = 0.998;
 	var _kMinimumSpeed = 0.01;
 
+	// Timeouts to stop reachedstart and reachedend from firing too often
+	var _extremityTimeouts = {};
+
 	// Create a global stylesheet to set up stylesheet rules and track dynamic entries
 	(function () {
 		var stylesheetContainerNode = document.getElementsByTagName('head')[0] || document.documentElement;
@@ -120,7 +123,7 @@ var FTScroller, CubicBezier;
 	 */
 	FTScroller = function (domNode, options) {
 		var key;
-		var destroy, setSnapSize, scrollTo, scrollBy, updateDimensions, addEventListener, removeEventListener, _startScroll, _updateScroll, _endScroll, _finalizeScroll, _interruptScroll, _flingScroll, _snapScroll, _getSnapPositionForPosition, _initializeDOM, _existingDOMValid, _domChanged, _updateDimensions, _updateScrollbarDimensions, _updateElementPosition, _updateSegments, _setAxisPosition, _scheduleAxisPosition, _fireEvent, _childFocused, _modifyDistanceBeyondBounds, _startAnimation, _scheduleRender, _cancelAnimation, _toggleEventHandlers, _onTouchStart, _onTouchMove, _onTouchEnd, _onMouseDown, _onMouseMove, _onMouseUp, _onPointerDown, _onPointerMove, _onPointerUp, _onPointerCancel, _onPointerCaptureEnd, _onClick, _onMouseScroll, _captureInput, _releaseInputCapture, _getBoundingRect;
+		var destroy, setSnapSize, scrollTo, scrollBy, updateDimensions, addEventListener, removeEventListener, _startScroll, _updateScroll, _endScroll, _finalizeScroll, _interruptScroll, _flingScroll, _snapScroll, _getSnapPositionForPosition, _initializeDOM, _existingDOMValid, _domChanged, _updateDimensions, _updateScrollbarDimensions, _updateElementPosition, _updateSegments, _setAxisPosition, _scheduleAxisPosition, _fireEvent, _childFocused, _modifyDistanceBeyondBounds, _startAnimation, _scheduleRender, _cancelAnimation, _toggleEventHandlers, _onTouchStart, _onTouchMove, _onTouchEnd, _onMouseDown, _onMouseMove, _onMouseUp, _onPointerDown, _onPointerMove, _onPointerUp, _onPointerCancel, _onPointerCaptureEnd, _onClick, _onMouseScroll, _captureInput, _releaseInputCapture, _getBoundingRect, _fireReachedExtremityEvent;
 
 
 		/* Note that actual object instantiation occurs at the end of the closure to avoid jslint errors */
@@ -276,7 +279,9 @@ var FTScroller, CubicBezier;
 			'scroll': [],
 			'scrollend': [],
 			'segmentwillchange': [],
-			'segmentdidchange': []
+			'segmentdidchange': [],
+			'reachedstart': [],
+			'reachedend': []
 		};
 
 		// MutationObserver instance, when supported and if DOM change sniffing is enabled
@@ -665,8 +670,10 @@ var FTScroller, CubicBezier;
 				if (_scrollableAxes.hasOwnProperty(axis)) {
 					if (targetPositions[axis] > 0) {
 						targetPositions[axis] = _modifyDistanceBeyondBounds(targetPositions[axis], axis);
+						_fireReachedExtremityEvent('start', axis);
 					} else if (targetPositions[axis] < _metrics.scrollEnd[axis]) {
 						targetPositions[axis] = _metrics.scrollEnd[axis] + _modifyDistanceBeyondBounds(targetPositions[axis] - _metrics.scrollEnd[axis], axis);
+						_fireReachedExtremityEvent('end', axis);
 					}
 
 					if (_reqAnimationFrame) {
@@ -1961,6 +1968,20 @@ var FTScroller, CubicBezier;
 			return { left: x, top: y, width: anElement.offsetWidth, height: anElement.offsetHeight };
 		};
 
+
+		/**
+		 * Fires the event to alert listeners whenever an extreme point of a
+		 * scroller has been reached
+		 */
+		_fireReachedExtremityEvent = function _fireReachedExtremityEvent(startOrEnd, axis) {
+			if (_extremityTimeouts[axis]) {
+				return;
+			}
+			_fireEvent('reached' + startOrEnd, { axis: axis });
+			_extremityTimeouts[axis] = window.setTimeout(function _extremityEventTimeout() {
+				delete _extremityTimeouts[axis];
+			}, 500);
+		};
 
 		/*                     Instantiation                     */
 
