@@ -558,6 +558,10 @@ var FTScroller, CubicBezier;
 			// If an animation is in progress, stop the scroll.
 			if (triggerScrollInterrupt) {
 				_interruptScroll();
+			} else {
+
+				// Allow clicks again, but only if a scroll was not interrupted
+				_preventClick = false;
 			}
 
 			// Store the initial event coordinates
@@ -570,9 +574,6 @@ var FTScroller, CubicBezier;
 			// Clear event history and add the start touch
 			_eventHistory.length = 0;
 			_eventHistory.push({ x: inputX, y: inputY, t: inputTime });
-
-			// Allow clicks again
-			_preventClick = false;
 
 			if (triggerScrollInterrupt) {
 				_updateScroll(inputX, inputY, inputTime, rawEvent, triggerScrollInterrupt);
