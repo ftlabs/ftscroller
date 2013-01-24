@@ -17,7 +17,7 @@
  * @codingstandard ftlabs-jslint
  */
 
-/*jslint nomen: true, vars: true, browser: true, es5: true, continue: true*/
+/*jslint nomen: true, vars: true, browser: true, es5: true, continue: true, white:true*/
 /*globals FTScrollerOptions*/
 
 var FTScroller, CubicBezier;
