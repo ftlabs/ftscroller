@@ -650,7 +650,6 @@ var FTScroller, CubicBezier;
 				}
 
 				// Enter scrolling
-				_captureInput();
 				_startAnimation();
 				_hasBeenScrolled = true;
 				_isScrolling = true;
@@ -716,13 +715,13 @@ var FTScroller, CubicBezier;
 		 */
 		_endScroll = function _endScroll(inputTime, rawEvent) {
 			_inputIdentifier = false;
+			_releaseInputCapture();
 			if (!_isScrolling) {
 				if (!_snapScroll() && _scrollbarsVisible) {
 					_finalizeScroll();
 				}
 				return;
 			}
-			_releaseInputCapture();
 			_cancelAnimation();
 
 			// Modify the last movement event to include the end event time
@@ -1853,6 +1852,7 @@ var FTScroller, CubicBezier;
 			}
 
 			_inputIdentifier = startEvent.pointerId;
+			_captureInput();
 			_startScroll(startEvent.clientX, startEvent.clientY, startEvent.timeStamp, startEvent);
 		};
 		_onPointerMove = function _onPointerMove(moveEvent) {
