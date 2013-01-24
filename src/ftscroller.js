@@ -255,6 +255,7 @@ var FTScroller, CubicBezier;
 		var _scrollbarsVisible = false;
 		var _baseScrollPosition = { x: 0, y: 0 };
 		var _lastScrollPosition = { x: 0, y: 0 };
+		var _scrollAtExtremity = { x: null, y: null };
 		var _preventClick = false;
 		var _timeouts = [];
 		var _hasBeenScrolled = false;
@@ -286,7 +287,9 @@ var FTScroller, CubicBezier;
 			'scroll': [],
 			'scrollend': [],
 			'segmentwillchange': [],
-			'segmentdidchange': []
+			'segmentdidchange': [],
+			'reachedstart': [],
+			'reachedend': []
 		};
 
 		// MutationObserver instance, when supported and if DOM change sniffing is enabled
@@ -467,7 +470,7 @@ var FTScroller, CubicBezier;
 			}
 
 			if (maxDuration) {
-				_timeouts.push(window.setTimeout(function () {
+				_timeouts.push(setTimeout(function () {
 					var axis;
 					for (axis in scrollPositionsToApply) {
 						if (scrollPositionsToApply.hasOwnProperty(axis)) {
@@ -826,7 +829,7 @@ var FTScroller, CubicBezier;
 		 * timeouts required.
 		 */
 		_flingScroll = function _flingScroll() {
-			var i, axis, movementSpeed, lastPosition, comparisonPosition, flingDuration, flingDistance, flingPosition, bounceDelay, bounceDistance, bounceDuration, bounceTarget, boundsBounce, modifiedDistance, flingBezier, timeProportion, flingStartSegment, beyondBoundsFlingDistance, baseFlingComponent;
+			var i, axis, movementSpeed, lastPosition, comparisonPosition, flingDuration, flingDistance, flingPosition, bounceDelay, bounceDistance, bounceDuration, bounceTarget, boundsBounce, modifiedDistance, flingBezier, timeProportion, boundsCrossDelay, flingStartSegment, beyondBoundsFlingDistance, baseFlingComponent;
 			var maxAnimationTime = 0;
 			var moveRequired = false;
 			var scrollPositionsToApply = {};
@@ -842,6 +845,7 @@ var FTScroller, CubicBezier;
 					bounceDistance = 0;
 					boundsBounce = false;
 					bounceTarget = false;
+					boundsCrossDelay = undefined;
 
 					// Re-set a default bezier curve for the animation, with the end lopped off for min speed
 					flingBezier = _kFlingTruncatedBezier;
@@ -966,6 +970,7 @@ var FTScroller, CubicBezier;
 								timeProportion = 0;
 							} else {
 								timeProportion = flingBezier._getCoordinateForT(flingBezier.getTForY((flingDistance - beyondBoundsFlingDistance) / flingDistance, 1 / flingDuration), flingBezier._p1.x, flingBezier._p2.x);
+								boundsCrossDelay = timeProportion * flingDuration;
 							}
 
 							// Eighth the distance beyonds the bounds
@@ -999,7 +1004,7 @@ var FTScroller, CubicBezier;
 								// sixth of the post-boundary fling.
 								bounceDelay = (timeProportion + ((1 - timeProportion) / 6)) * flingDuration;
 
-								_scheduleAxisPosition(axis, (_lastScrollPosition[axis] + baseFlingComponent + modifiedDistance), ((1 - timeProportion) * flingDuration / 6), _kDecelerateBezier, flingDuration * timeProportion);
+								_scheduleAxisPosition(axis, (_lastScrollPosition[axis] + baseFlingComponent + modifiedDistance), ((1 - timeProportion) * flingDuration / 6), _kDecelerateBezier, boundsCrossDelay);
 
 								// Modify the fling to match, clipping to prevent over-fling
 								flingBezier = flingBezier.divideAtX(bounceDelay / flingDuration, 1 / flingDuration)[0];
@@ -1050,7 +1055,7 @@ var FTScroller, CubicBezier;
 					moveRequired = true;
 
 					// Perform the fling
-					_setAxisPosition(axis, flingPosition, flingDuration, flingBezier);
+					_setAxisPosition(axis, flingPosition, flingDuration, flingBezier, boundsCrossDelay);
 
 					// Schedule a bounce if appropriate
 					if (bounceDistance && bounceDuration) {
@@ -1063,7 +1068,7 @@ var FTScroller, CubicBezier;
 			}
 
 			if (moveRequired && maxAnimationTime) {
-				_timeouts.push(window.setTimeout(function () {
+				_timeouts.push(setTimeout(function () {
 					var axis;
 
 					// Update the stored scroll position ready for finalising
@@ -1107,7 +1112,7 @@ var FTScroller, CubicBezier;
 				}
 			}
 
-			_timeouts.push(window.setTimeout(function () {
+			_timeouts.push(setTimeout(function () {
 
 				// Update the stored scroll position ready for flinalizing
 				_lastScrollPosition = targetPosition;
@@ -1302,7 +1307,7 @@ var FTScroller, CubicBezier;
 			}
 
 			// Set up the DOM changed timer
-			_domChangeDebouncer = window.setTimeout(function () {
+			_domChangeDebouncer = setTimeout(function () {
 				_updateDimensions();
 			}, 100);
 		};
@@ -1508,8 +1513,8 @@ var FTScroller, CubicBezier;
 			}
 		};
 
-		_setAxisPosition = function _setAxisPosition(axis, position, animationDuration, animationBezier) {
-			var transitionCSSString;
+		_setAxisPosition = function _setAxisPosition(axis, position, animationDuration, animationBezier, boundsCrossDelay) {
+			var transitionCSSString, newPositionAtExtremity = null;
 
 			// Only update position if the axis node exists (DOM elements can go away if
 			// the scroller instance is not destroyed correctly)
@@ -1540,6 +1545,27 @@ var FTScroller, CubicBezier;
 				_scrollbarNodes[axis].style[_transformProperty] = _translateRulePrefix + _transformPrefixes[axis] + (-position * _metrics.container[axis] / _metrics.content[axis]) + 'px' + _transformSuffixes[axis];
 			}
 
+			// Determine whether the scroll is at an extremity.
+			if (position >= 0) {
+				newPositionAtExtremity = 'start';
+			} else if (position <= _metrics.scrollEnd[axis]) {
+				newPositionAtExtremity = 'end';
+			}
+
+			// If the extremity status has changed, fire an appropriate event
+			if (newPositionAtExtremity !== _scrollAtExtremity[axis]) {
+				if (newPositionAtExtremity !== null) {
+					if (animationDuration) {
+						_timeouts.push(setTimeout(function() {
+							_fireEvent('reached' + newPositionAtExtremity, { axis: axis });
+						}, boundsCrossDelay || animationDuration));
+					} else {
+						_fireEvent('reached' + newPositionAtExtremity, { axis: axis });
+					}
+				}
+				_scrollAtExtremity[axis] = newPositionAtExtremity;
+			}
+
 			// Update the recorded position if there's no duration
 			if (!animationDuration) {
 				_lastScrollPosition[axis] = position;
@@ -1547,7 +1573,7 @@ var FTScroller, CubicBezier;
 		};
 
 		_scheduleAxisPosition = function _scheduleAxisPosition(axis, position, animationDuration, animationBezier, afterDelay) {
-			_timeouts.push(window.setTimeout(function () {
+			_timeouts.push(setTimeout(function () {
 				_setAxisPosition(axis, position, animationDuration, animationBezier);
 			}, afterDelay));
 		};
