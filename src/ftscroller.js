@@ -417,7 +417,6 @@ var FTScroller, CubicBezier;
 		 */
 		scrollTo = function scrollTo(left, top, animationDuration) {
 			var targetPosition, duration, positions, axis, maxDuration = 0, scrollPositionsToApply = {};
-			_hasBeenScrolled = true;
 
 			// If a manual scroll is in progress, cancel it
 			_endScroll(Date.now());
@@ -455,6 +454,16 @@ var FTScroller, CubicBezier;
 					scrollPositionsToApply[axis] = targetPosition;
 					maxDuration = Math.max(maxDuration, duration);
 				}
+			}
+
+			// If the scroll had resulted in a change in position, perform some additional actions:
+			if (_baseScrollPosition.x !== positions.x || _baseScrollPosition.y !== positions.y) {
+
+				// Mark a scroll as having ever occurred
+				_hasBeenScrolled = true;
+
+				// If an animation duration is present, fire a scroll start event
+				_fireEvent('scrollstart', { scrollLeft: -_baseScrollPosition.x, scrollTop: -_baseScrollPosition.y });
 			}
 
 			if (maxDuration) {
