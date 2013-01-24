@@ -152,6 +152,11 @@ var FTScroller, CubicBezier;
 			// The initial movement required to trigger a scroll, in pixels
 			scrollBoundary: 1,
 
+			// Whether to always enable scrolling, even if the content of the scroller does not
+			// require the scroller to function.  This makes the scroller behave more like an
+			// element set to "overflow: scroll", with bouncing always occurring if enabled.
+			alwaysScroll: false,
+
 			// The content width to use when determining scroller dimensions.  If this
 			// is false, the width will be detected based on the actual content.
 			contentWidth: undefined,
@@ -1448,10 +1453,10 @@ var FTScroller, CubicBezier;
 
 			// Update scroll caches
 			_scrollableAxes = {};
-			if (_instanceOptions.scrollingX && (_metrics.content.x > _metrics.container.x)) {
+			if (_instanceOptions.scrollingX && (_metrics.content.x > _metrics.container.x || _instanceOptions.alwaysScroll)) {
 				_scrollableAxes.x = true;
 			}
-			if (_instanceOptions.scrollingY && (_metrics.content.y > _metrics.container.y)) {
+			if (_instanceOptions.scrollingY && (_metrics.content.y > _metrics.container.y || _instanceOptions.alwaysScroll)) {
 				_scrollableAxes.y = true;
 			}
 		};
