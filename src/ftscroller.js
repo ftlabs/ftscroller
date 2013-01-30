@@ -1779,19 +1779,19 @@ var FTScroller, CubicBezier;
 				_containerNode._ftscrollerToggle('MSPointerUp', _onPointerUp, true);
 				_containerNode._ftscrollerToggle('MSPointerCancel', _onPointerCancel, true);
 			} else if (_trackTouchEvents) {
-				_containerNode._ftscrollerToggle('touchstart', _onTouchStart, true);
-				_containerNode._ftscrollerToggle('touchmove', _onTouchMove, true);
-				_containerNode._ftscrollerToggle('touchend', _onTouchEnd, true);
-				_containerNode._ftscrollerToggle('touchcancel', _onTouchEnd, true);
+				_containerNode._ftscrollerToggle('touchstart', _onTouchStart);
+				_containerNode._ftscrollerToggle('touchmove', _onTouchMove);
+				_containerNode._ftscrollerToggle('touchend', _onTouchEnd);
+				_containerNode._ftscrollerToggle('touchcancel', _onTouchEnd);
 			} else {
-				_containerNode._ftscrollerToggle('mousedown', _onMouseDown, true);
+				_containerNode._ftscrollerToggle('mousedown', _onMouseDown);
 				if (!enable) {
-					document.removeEventListener('mousemove', _onMouseMove, true);
-					document.removeEventListener('mouseup', _onMouseUp, true);
+					document.removeEventListener('mousemove', _onMouseMove);
+					document.removeEventListener('mouseup', _onMouseUp);
 				}
 			}
-			_containerNode._ftscrollerToggle('DOMMouseScroll', _onMouseScroll, false);
-			_containerNode._ftscrollerToggle('mousewheel', _onMouseScroll, false);
+			_containerNode._ftscrollerToggle('DOMMouseScroll', _onMouseScroll);
+			_containerNode._ftscrollerToggle('mousewheel', _onMouseScroll);
 
 			// Add a click listener.  On IE, add the listener to the document, to allow
 			// clicks to be cancelled if a scroll ends outside the bounds of the container; on
@@ -1916,7 +1916,6 @@ var FTScroller, CubicBezier;
 		 * Mouse event handlers
 		 */
 		_onMouseDown = function _onMouseDown(startEvent) {
-
 			// Don't track the right mouse buttons, or a context menu
 			if ((startEvent.button && startEvent.button === 2) || startEvent.ctrlKey) {
 				return;
@@ -1928,8 +1927,8 @@ var FTScroller, CubicBezier;
 			}
 
 			// Add move & up handlers to the *document* to allow handling outside the element
-			document.addEventListener('mousemove', _onMouseMove, true);
-			document.addEventListener('mouseup', _onMouseUp, true);
+			document.addEventListener('mousemove', _onMouseMove);
+			document.addEventListener('mouseup', _onMouseUp);
 
 			_inputIdentifier = startEvent.button || 1;
 			_inputIndex = 0;
@@ -1947,8 +1946,8 @@ var FTScroller, CubicBezier;
 				return;
 			}
 
-			document.removeEventListener('mousemove', _onMouseMove, true);
-			document.removeEventListener('mouseup', _onMouseUp, true);
+			document.removeEventListener('mousemove', _onMouseMove);
+			document.removeEventListener('mouseup', _onMouseUp);
 
 			// Release capture if possible
 			if (_containerNode.releaseCapture) {
