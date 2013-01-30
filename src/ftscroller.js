@@ -130,7 +130,7 @@ var FTScroller, CubicBezier;
 	 */
 	FTScroller = function (domNode, options) {
 		var key;
-		var destroy, setSnapSize, scrollTo, scrollBy, updateDimensions, addEventListener, removeEventListener, _startScroll, _updateScroll, _endScroll, _finalizeScroll, _interruptScroll, _flingScroll, _snapScroll, _getSnapPositionForPosition, _initializeDOM, _existingDOMValid, _domChanged, _updateDimensions, _updateScrollbarDimensions, _updateElementPosition, _updateSegments, _setAxisPosition, _scheduleAxisPosition, _fireEvent, _childFocused, _modifyDistanceBeyondBounds, _startAnimation, _scheduleRender, _cancelAnimation, _toggleEventHandlers, _onTouchStart, _onTouchMove, _onTouchEnd, _onMouseDown, _onMouseMove, _onMouseUp, _onPointerDown, _onPointerMove, _onPointerUp, _onPointerCancel, _onPointerCaptureEnd, _onClick, _onMouseScroll, _captureInput, _releaseInputCapture, _getBoundingRect;
+		var destroy, setSnapSize, scrollTo, scrollBy, updateDimensions, addEventListener, removeEventListener, _startScroll, _updateScroll, _endScroll, _finalizeScroll, _interruptScroll, _flingScroll, _snapScroll, _getSnapPositionForPosition, _initializeDOM, _existingDOMValid, _domChanged, _updateDimensions, _updateScrollbarDimensions, _updateElementPosition, _updateSegments, _setAxisPosition, _scheduleAxisPosition, _fireEvent, _childFocused, _modifyDistanceBeyondBounds, _distancesBeyondBounds, _startAnimation, _scheduleRender, _cancelAnimation, _toggleEventHandlers, _onTouchStart, _onTouchMove, _onTouchEnd, _onMouseDown, _onMouseMove, _onMouseUp, _onPointerDown, _onPointerMove, _onPointerUp, _onPointerCancel, _onPointerCaptureEnd, _onClick, _onMouseScroll, _captureInput, _releaseInputCapture, _getBoundingRect;
 
 
 		/* Note that actual object instantiation occurs at the end of the closure to avoid jslint errors */
@@ -149,8 +149,15 @@ var FTScroller, CubicBezier;
 			// Enable scrolling on the Y axis if content is available
 			scrollingY: true,
 
-			// The initial movement required to trigger a scroll, in pixels
+			// The initial movement required to trigger a scroll, in pixels; this is the point at which
+			// the scroll is exclusive to this particular FTScroller instance.
 			scrollBoundary: 1,
+
+			// The initial movement required to trigger a visual indication that scrolling is occurring,
+			// in pixels.  This is enforced to be less than or equal to the scrollBoundary, and is used to
+			// define when the scroller starts drawing changes in response to an input, even if the scroll
+			// is not treated as having begun/locked yet.
+			scrollResponseBoundary: 1,
 
 			// Whether to always enable scrolling, even if the content of the scroller does not
 			// require the scroller to function.  This makes the scroller behave more like an
@@ -256,6 +263,7 @@ var FTScroller, CubicBezier;
 
 		// Current scroll positions and tracking
 		var _isScrolling = false;
+		var _isDisplayingScroll = false;
 		var _isAnimating = false;
 		var _scrollbarsVisible = false;
 		var _baseScrollPosition = { x: 0, y: 0 };
@@ -333,6 +341,9 @@ var FTScroller, CubicBezier;
 				options.updateOnChanges = false;
 			}
 		}
+
+		// Validate the scroll response parameter
+		_instanceOptions.scrollResponseBoundary = Math.min(_instanceOptions.scrollBoundary, _instanceOptions.scrollResponseBoundary);
 
 		// Update base scrollable axes
 		if (_instanceOptions.scrollingX) {
@@ -603,53 +614,64 @@ var FTScroller, CubicBezier;
 		 * Continue a scroll as a result of an updated position
 		 */
 		_updateScroll = function _updateScroll(inputX, inputY, inputTime, rawEvent, scrollInterrupt) {
-			var axis;
+			var axis, otherScrollerActive;
 			var initialScroll = false;
 			var gesture = {
 				x: inputX - _gestureStart.x,
 				y: inputY - _gestureStart.y
 			};
 			var targetPositions = { x: _baseScrollPosition.x + gesture.x, y: _baseScrollPosition.y + gesture.y };
+			var distancesBeyondBounds = _distancesBeyondBounds(targetPositions);
 
 			// Opera fix
 			if (inputTime <= 0) {
 				inputTime = Date.now();
 			}
 
-			// If not yet scrolling, determine whether the triggering boundary
-			// has been exceeded
+			// If scrolling has not yet locked to this scroller, stop observing input events
 			if (!_isScrolling) {
 
-				// If a window scrolling flag is set, and evaluates to true, don't scroll here
-				if (_instanceOptions.windowScrollingActiveFlag && window[_instanceOptions.windowScrollingActiveFlag]) {
-					if (_scrollbarsVisible) {
-						_finalizeScroll();
-					}
-					return;
+				// Check the internal flag to determine if another FTScroller is scrolling
+				if (_ftscrollerMoving && _ftscrollerMoving !== _self) {
+					otherScrollerActive = true;
 				}
 
-				// If another FTScroller is scrolling, don't scroll here as well
-				if (_ftscrollerMoving && _ftscrollerMoving !== _self) {
+				// Otherwise, check the window scrolling flag to see if anything else has claimed scrolling
+				else if (_instanceOptions.windowScrollingActiveFlag && window[_instanceOptions.windowScrollingActiveFlag]) {
+					otherScrollerActive = true;
+				}
+
+				// If another scroller was active, clean up and stop processing.
+				if (otherScrollerActive) {
 					if (_scrollbarsVisible) {
-						_finalizeScroll();
+						_cancelAnimation();
+						_releaseInputCapture();
+						if (!_snapScroll(true)) {
+							_finalizeScroll(true);
+						}
 					}
 					return;
 				}
+			}
+				
+			// If not yet displaying a scroll, determine whether that triggering boundary
+			// has been exceeded
+			if (!_isDisplayingScroll) {
 
 				// Determine whether to prevent the default scroll event - if the scroll could still
 				// be triggered, prevent the default to avoid problems (particularly on PlayBook)
-				if ((_scrollableAxes.x && gesture.x && (_instanceOptions.bouncing
-							|| (targetPositions.x < 0 && targetPositions.x > _metrics.scrollEnd.x)))
-						|| (_scrollableAxes.y && gesture.y && (_instanceOptions.bouncing
-							|| (targetPositions.y < 0 && targetPositions.y > _metrics.scrollEnd.y)))) {
+				if (_instanceOptions.bouncing
+						|| scrollInterrupt
+						|| (_scrollableAxes.x && gesture.x && distancesBeyondBounds.x < 0)
+						|| (_scrollableAxes.y && gesture.y && distancesBeyondBounds.y < 0)) {
 					rawEvent.preventDefault();
 				}
 
 				// Check scrolled distance against the boundary limit to see if scrolling can be triggered.
 				// If snapping is active and the scroll has been interrupted, trigger at once
 				if (!(scrollInterrupt && _instanceOptions.snapping)
-						&& (!_scrollableAxes.x || Math.abs(gesture.x) < _instanceOptions.scrollBoundary)
-						&& (!_scrollableAxes.y || Math.abs(gesture.y) < _instanceOptions.scrollBoundary)) {
+						&& (!_scrollableAxes.x || Math.abs(gesture.x) < _instanceOptions.scrollResponseBoundary)
+						&& (!_scrollableAxes.y || Math.abs(gesture.y) < _instanceOptions.scrollResponseBoundary)) {
 					return;
 				}
 
@@ -657,8 +679,8 @@ var FTScroller, CubicBezier;
 				// now - this allows other scrollers to claim if appropriate, allowing nicer nested scrolls.
 				if (!_instanceOptions.bouncing
 						&& !scrollInterrupt
-						&& (!_scrollableAxes.x || !gesture.x || targetPositions.x > 0 || targetPositions.x < _metrics.scrollEnd.x)
-						&& (!_scrollableAxes.y || !gesture.y || targetPositions.y > 0 || targetPositions.y < _metrics.scrollEnd.y)) {
+						&& (!_scrollableAxes.x || !gesture.x || distancesBeyondBounds.x > 0)
+						&& (!_scrollableAxes.y || !gesture.y || distancesBeyondBounds.y > 0)) {
 
 					// Prevent the original click now that scrolling would be triggered
 					_preventClick = true;
@@ -666,24 +688,36 @@ var FTScroller, CubicBezier;
 					return;
 				}
 
-				// Enter scrolling
+				// Trigger the start of visual scrolling
 				_startAnimation();
+				_isDisplayingScroll = true;
 				_hasBeenScrolled = true;
-				_isScrolling = true;
 				_isAnimating = true;
-				_ftscrollerMoving = _self;
-				if (_instanceOptions.windowScrollingActiveFlag) {
-					window[_instanceOptions.windowScrollingActiveFlag] = _self;
-				}
 				initialScroll = true;
 				_scrollbarsVisible = true;
-
-				_fireEvent('scrollstart', { scrollLeft: -_baseScrollPosition.x, scrollTop: -_baseScrollPosition.y });
 			} else {
 
 				// Prevent the event default.  It is safe to call this in IE10 because the event is never
 				// a window.event, always a "true" event.
 				rawEvent.preventDefault();
+			}
+
+			// If not yet locked to a scroll, determine whether to do so
+			if (!_isScrolling) {
+
+				// If the gesture distance has exceeded the scroll lock distance, or snapping is active
+				// and the scroll has been interrupted, enture exclusive scrolling.
+				if ((scrollInterrupt && _instanceOptions.snapping)
+						|| (_scrollableAxes.x && Math.abs(gesture.x) >= _instanceOptions.scrollBoundary)
+						|| (_scrollableAxes.y && Math.abs(gesture.y) >= _instanceOptions.scrollBoundary)) {
+
+					_isScrolling = true;
+					_ftscrollerMoving = _self;
+					if (_instanceOptions.windowScrollingActiveFlag) {
+						window[_instanceOptions.windowScrollingActiveFlag] = _self;
+					}
+					_fireEvent('scrollstart', { scrollLeft: -_baseScrollPosition.x, scrollTop: -_baseScrollPosition.y });
+				}
 			}
 
 			// Cancel text selections while dragging a cursor
@@ -715,8 +749,11 @@ var FTScroller, CubicBezier;
 				}
 			}
 
-			_fireEvent('scroll', { scrollLeft: -targetPositions.x, scrollTop: -targetPositions.y });
-			_updateSegments(false);
+			// If full, locked scrolling has enabled, fire any scroll and segment change events
+			if (_isScrolling) {
+				_fireEvent('scroll', { scrollLeft: -targetPositions.x, scrollTop: -targetPositions.y });
+				_updateSegments(false);
+			}
 
 			// Add an event to the event history, keeping it around twenty events long
 			_eventHistory.push({ x: inputX, y: inputY, t: inputTime });
@@ -733,19 +770,20 @@ var FTScroller, CubicBezier;
 		_endScroll = function _endScroll(inputTime, rawEvent) {
 			_inputIdentifier = false;
 			_releaseInputCapture();
+			_cancelAnimation();
 			if (!_isScrolling) {
-				if (!_snapScroll() && _scrollbarsVisible) {
-					_finalizeScroll();
+				if (!_snapScroll(true) && _scrollbarsVisible) {
+					_finalizeScroll(true);
 				}
 				return;
 			}
-			_cancelAnimation();
 
 			// Modify the last movement event to include the end event time
 			_eventHistory[_eventHistory.length - 1].t = inputTime;
 
 			// Update flags
 			_isScrolling = false;
+			_isDisplayingScroll = false;
 			_ftscrollerMoving = false;
 			if (_instanceOptions.windowScrollingActiveFlag) {
 				window[_instanceOptions.windowScrollingActiveFlag] = false;
@@ -767,22 +805,25 @@ var FTScroller, CubicBezier;
 		/**
 		 * Remove the scrolling class, cleaning up display.
 		 */
-		_finalizeScroll = function _finalizeScroll() {
+		_finalizeScroll = function _finalizeScroll(scrollCancelled) {
 			var i, l, axis;
 
 			_isAnimating = false;
 			_scrollbarsVisible = false;
+			_isDisplayingScroll = false;
 
 			// Remove scrolling class
 			_containerNode.className = _containerNode.className.replace(/ ?ftscroller_scrolling/g, '');
 
-			// Store final position
+			// Store final position if scrolling occurred
 			_baseScrollPosition.x = _lastScrollPosition.x;
 			_baseScrollPosition.y = _lastScrollPosition.y;
 
-			_fireEvent('scroll', { scrollLeft: -_baseScrollPosition.x, scrollTop: -_baseScrollPosition.y });
-			_updateSegments(true);
-			_fireEvent('scrollend', { scrollLeft: -_baseScrollPosition.x, scrollTop: -_baseScrollPosition.y });
+			if (!scrollCancelled) {
+				_fireEvent('scroll', { scrollLeft: -_baseScrollPosition.x, scrollTop: -_baseScrollPosition.y });
+				_updateSegments(true);
+				_fireEvent('scrollend', { scrollLeft: -_baseScrollPosition.x, scrollTop: -_baseScrollPosition.y });
+			}
 
 			// Restore transitions
 			for (axis in _scrollableAxes) {
@@ -1093,8 +1134,9 @@ var FTScroller, CubicBezier;
 		/**
 		 * Bounce back into bounds if necessary, or snap to a grid location.
 		 */
-		_snapScroll = function _snapScroll() {
+		_snapScroll = function _snapScroll(scrollCancelled) {
 			var axis;
+			var snapDuration = scrollCancelled ? 100 : 350;
 
 			// Get the current position and see if a snap is required
 			var targetPosition = _getSnapPositionForPosition(_lastScrollPosition);
@@ -1113,17 +1155,17 @@ var FTScroller, CubicBezier;
 			// Perform the snap
 			for (axis in _baseScrollableAxes) {
 				if (_baseScrollableAxes.hasOwnProperty(axis)) {
-					_setAxisPosition(axis, targetPosition[axis], 350);
+					_setAxisPosition(axis, targetPosition[axis], snapDuration);
 				}
 			}
 
 			_timeouts.push(setTimeout(function () {
 
-				// Update the stored scroll position ready for flinalizing
+				// Update the stored scroll position ready for finalizing
 				_lastScrollPosition = targetPosition;
 
-				_finalizeScroll();
-			}, 350));
+				_finalizeScroll(scrollCancelled);
+			}, snapDuration));
 
 			return true;
 		};
@@ -1643,6 +1685,34 @@ var FTScroller, CubicBezier;
 		};
 
 		/**
+		 * Given positions for each enabled axis, returns an object showing how far each axis is beyond
+		 * bounds. If within bounds, -1 is returned; if at the bounds, 0 is returned.
+		 */
+		_distancesBeyondBounds = function _distancesBeyondBounds(positions) {
+			var axis, position;
+			var distances = {};
+			for (axis in positions) {
+				if (positions.hasOwnProperty(axis)) {
+					position = positions[axis];
+
+					// If the position is to the left/top, no further modification required
+					if (position >= 0) {
+						distances[axis] = position;
+
+					// If it's within the bounds, use -1
+					} else if (position > _metrics.scrollEnd[axis]) {
+						distances[axis] = -1;
+
+					// Otherwise, amend by the distance of the maximum edge
+					} else {
+						distances[axis] = _metrics.scrollEnd[axis] - position;
+					}
+				}
+			}
+			return distances;
+		};
+
+		/**
 		 * On platforms which support it, use RequestAnimationFrame to group
 		 * position updates for speed.  Starts the render process.
 		 */
@@ -1757,9 +1827,15 @@ var FTScroller, CubicBezier;
 						});
 					} else {
 						_contentParentNode.addEventListener('DOMSubtreeModified', function (e) {
-							if (e && e.srcElement === _contentParentNode) {
+
+							
+							// Ignore changes to nested FT Scrollers - even updating a transform style
+							// can trigger a DOMSubtreeModified in IE, causing nested scrollers to always
+							// favour the deepest scroller as parent scrollers 'resize'/end scrolling.
+							if (e && (e.srcElement === _contentParentNode || e.srcElement.className.indexOf('ftscroller_') !== -1)) {
 								return;
 							}
+
 							_domChanged();
 						}, true);
 					}
@@ -1996,6 +2072,7 @@ var FTScroller, CubicBezier;
 				_inputIdentifier = false;
 				_releaseInputCapture();
 				_isScrolling = false;
+				_isDisplayingScroll = false;
 				_ftscrollerMoving = false;
 				if (_instanceOptions.windowScrollingActiveFlag) {
 					window[_instanceOptions.windowScrollingActiveFlag] = false;

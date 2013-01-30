@@ -40,6 +40,7 @@ FTScroller is designed to accommodate a range of use cases.  Here are some examp
 
 Options must be specified at create-time by passing a JSON object as the second argument to the `FTScroller` constructor.
 
+* `alwaysScroll` Whether to always enable scrolling, even if the content of the scroller is not large enough to spill out of the container.  This makes the scroller behave more like an element set to "overflow: scroll", with bouncing always occurring if enabled _(boolean, default false)_
 * `baseAlignments` Determines where to anchor the content when the scroller is set up, specified individually for each axis using a JSON object with the keys `x` and `y`. Valid alignments for each axis are -1 (top or left), 0 (center), and 1 (bottom or right).  For example, the default baseAlignments of `{x:-1,y:-1}` will display the scroller initially scrolled to the top left of its range.  This also affects the alignment of content where the content is smaller than the scroller.
 * `bouncing` Allow scroll bouncing and elasticity near the ends of the range and at snap points _(boolean, default true)_
 * `contentWidth` Define the scrollable width; if not defined, this will match the content width _(numeric, default undefined)_
@@ -49,7 +50,8 @@ Options must be specified at create-time by passing a JSON object as the second 
 * `maxFlingDuration` Set the maximum time (ms) that a fling can take to complete once the input has ended _(numeric, default 1000ms)_
 * `paginatedSnap` If snapping is enabled, restricts each scroll movement to one 'page' span.  That is, if set to true, it will not be possible to move more than one page in a single movement. _(boolean, default false)_
 * `scrollbars` Whether to display iOS-style scrollbars (which you can style yourself using `.ftscroller_scrollbar` and `.ftscroller_scrollbarx`/`.ftscroller_scrollbary`) while the content is animating _(boolean, default true)_
-* `scrollBoundary` The initial movement required to trigger a scroll, in pixels _(integer, default 1)_
+* `scrollBoundary` The initial movement required to trigger a full scroll, in pixels; this is the point at which the scroll is exclusive to this particular FTScroller instance and flings become active _(integer, default 1)_
+* `scrollResponseBoundary` The initial movement required to trigger a visual scroll update, in pixels _(integer, default 1)_
 * `scrollingX` Enable scrolling on the X axis if content is available _(boolean, default true)_
 * `scrollingY` Enable scrolling on the Y axis if content is available _(boolean, default true)_
 * `snapping` Enable snapping of content to defined 'pages' or segments _(boolean, default false)_
