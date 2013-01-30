@@ -628,7 +628,7 @@ var FTScroller, CubicBezier;
 				inputTime = Date.now();
 			}
 
-			// If scrolling has not yet locked to this scroller, stop observing input events
+			// If scrolling has not yet locked to this scroller, check whether to stop scrolling
 			if (!_isScrolling) {
 
 				// Check the internal flag to determine if another FTScroller is scrolling
@@ -643,9 +643,10 @@ var FTScroller, CubicBezier;
 
 				// If another scroller was active, clean up and stop processing.
 				if (otherScrollerActive) {
+					_inputIdentifier = false;
+					_releaseInputCapture();
 					if (_scrollbarsVisible) {
 						_cancelAnimation();
-						_releaseInputCapture();
 						if (!_snapScroll(true)) {
 							_finalizeScroll(true);
 						}
