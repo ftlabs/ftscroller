@@ -100,6 +100,8 @@ Events can be bound with the `addEventListener` method.  Events are fired syncro
 * `scrollend`  Fired when a scroll movement ends.  Passes an object with the same characteristics as `scroll`.
 * `segmentdidchange` Fires on completion of a scroll movement, if the scroller is on a different segment to the one it was on at the start of the movement.  Passes an object with `segmentX` and `segmentY` properties.
 * `segmentwillchange` Fires as soon as the scroll position crosses a segment boundary, during a scroll movement.  Passes an object with `segmentX` and `segmentY` properties.
+* `reachedStart` Fires when the scroll position reaches the top or left of a scroller.  Passes an object with an `axis` property indicating whether the `x` or `y` axis reached its start position.
+* `reachedEnd` Fires when the scroll position reaches the bottom or right of a scroller.  Passes an object with an `axis` property indicating whether the `x` or `y` axis reached its end position.
 
 ## Compatibility
 
