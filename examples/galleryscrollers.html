@@ -9,13 +9,14 @@
 		body { font-family: sans-serif; -webkit-text-size-adjust: 100% }
 		section { padding: 0.7em; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; -ms-box-sizing: border-box; box-sizing: border-box }
 		p { margin: 0.5em 0; }
+		.gallerywrapper { height: 402px; }
 
 		/* This is the container of the horizontal scroller (border given so the scrolling canvas is clearly distinguishable). */
-		#scrollable_h { width: 400px; height: 600px; border: 1px solid #555; white-space: nowrap }
+		.scrollable_h { width: 400px; height: 400px; border: 1px solid #555; white-space: nowrap; overflow: hidden }
 
 		/* Each of the sections within the scrollable content is sized to fit the container, and will itself be scrollable vertically.  This is the style for the vertical scroll containers */
-		#horizontalwrapper { width: 800px; overflow: hidden }
-		.vscroller { width: 400px; height: 600px; display: inline-block; white-space: normal; }
+		.horizontalwrapper { width: 800px; overflow: hidden }
+		.vscroller { width: 400px; height: 400px; display: inline-block; white-space: normal; }
 
 	</style>
 </head>
@@ -25,129 +26,72 @@
 	<ul>
 		<li>The vertical scrollers have visible scrollbars and bouncing enabled, while the horizontal scroller has no scrollbars or bouncing.</li>
 		<li>The windowScrollingActiveFlag property is used to ensure that it's not possible to scroll on multiple axes simultaneously.</li>
-		<li>The horizontal scroller has a larger tolerance, so if there is a diagonal aspect to the mouse movement, it will assume a vertical scroll more eagerly than a horizontal one.</li>
 		<li>Snapping is used on the horizontal scroller to ensure that a scroll movement always ends properly centered on a column.</li>
 	</ul>
-
-	<div id='scrollable_h'>
-
-		<!-- Content from Wikipedia.  Skip to the bottom for the scroller JavaScript. -->
-		<div id="horizontalwrapper">
-			<div id='scrollable_v1' class='vscroller'><section>
-			<h2>Carbon</h2>
-			<p><b>Carbon</b> <span class="nowrap"><span title="Representation in the International Phonetic Alphabet (IPA)" class="IPA"><a href="/wiki/Wikipedia:IPA_for_English" title="Wikipedia:IPA for English">/</a></span><span class="IPA"><a href="/wiki/Wikipedia:IPA_for_English#Key" title="Wikipedia:IPA for English"><span title="/ˈ/ primary stress follows" style="border-bottom:1px dotted">ˈ</span></a></span><span class="IPA"><a href="/wiki/Wikipedia:IPA_for_English#Key" title="Wikipedia:IPA for English"><span title="'k' in 'kind'" style="border-bottom:1px dotted">k</span></a></span><span class="IPA"><a href="/wiki/Wikipedia:IPA_for_English#Key" title="Wikipedia:IPA for English"><span title="/ɑr/ 'ar' in 'bard'" style="border-bottom:1px dotted">ɑr</span></a></span><span class="IPA"><a href="/wiki/Wikipedia:IPA_for_English#Key" title="Wikipedia:IPA for English"><span title="'b' in 'buy'" style="border-bottom:1px dotted">b</span></a></span><span class="IPA"><a href="/wiki/Wikipedia:IPA_for_English#Key" title="Wikipedia:IPA for English"><span title="/ən/ 'on' in 'button'" style="border-bottom:1px dotted">ən</span></a></span><span title="Representation in the International Phonetic Alphabet (IPA)" class="IPA"><a href="/wiki/Wikipedia:IPA_for_English" title="Wikipedia:IPA for English">/</a></span></span> (from <a href="/wiki/Latin_language" title="Latin language" class="mw-redirect">Latin</a>: <span lang="la" xml:lang="la"><i>carbo</i></span> "coal") is the <a href="/wiki/Chemical_element" title="Chemical element">chemical element</a> with symbol <b>C</b> and <a href="/wiki/Atomic_number" title="Atomic number">atomic number</a> 6. As a member of <a href="/wiki/Group_14" title="Group 14" class="mw-redirect">group 14</a> on the <a href="/wiki/Periodic_table" title="Periodic table">periodic table</a>, it is <a href="/wiki/Nonmetal" title="Nonmetal">nonmetallic</a> and <a href="/wiki/Tetravalence" title="Tetravalence">tetravalent</a>—making four electrons available to form <a href="/wiki/Covalent_bond" title="Covalent bond">covalent</a> chemical bonds. There are three naturally occurring <a href="/wiki/Isotopes" title="Isotopes" class="mw-redirect">isotopes</a>, with <a href="/wiki/Carbon-12" title="Carbon-12"><sup>12</sup>C</a> and <a href="/wiki/Carbon-13" title="Carbon-13"><sup>13</sup>C</a> being stable, while <a href="/wiki/Carbon-14" title="Carbon-14"><sup>14</sup>C</a> is <a href="/wiki/Radioactive" title="Radioactive" class="mw-redirect">radioactive</a>, decaying with a <a href="/wiki/Half-life" title="Half-life">half-life</a> of about 5,730&nbsp;years.<sup id="cite_ref-isotopes_8-0" class="reference"><a href="#cite_note-isotopes-8"><span>[</span>9<span>]</span></a></sup> Carbon is one of the <a href="/wiki/Discoveries_of_the_chemical_elements" title="Discoveries of the chemical elements" class="mw-redirect">few elements known since antiquity</a>.<sup id="cite_ref-9" class="reference"><a href="#cite_note-9"><span>[</span>10<span>]</span></a></sup><sup id="cite_ref-D2_10-0" class="reference"><a href="#cite_note-D2-10"><span>[</span>11<span>]</span></a></sup></p>
-			<p>There are several <a href="/wiki/Allotropes_of_carbon" title="Allotropes of carbon">allotropes of carbon</a> of which the best known are <a href="/wiki/Graphite" title="Graphite">graphite</a>, <a href="/wiki/Diamond" title="Diamond">diamond</a>, and <a href="/wiki/Amorphous_carbon" title="Amorphous carbon">amorphous carbon</a>.<sup id="cite_ref-therm_prop_11-0" class="reference"><a href="#cite_note-therm_prop-11"><span>[</span>12<span>]</span></a></sup> The <a href="/wiki/Physical_properties" title="Physical properties" class="mw-redirect">physical properties</a> of carbon vary widely with the allotropic form. For example, diamond is highly <a href="/wiki/Transparency_(optics)" title="Transparency (optics)" class="mw-redirect">transparent</a>, while graphite is <a href="/wiki/Opacity_(optics)" title="Opacity (optics)">opaque</a> and black. Diamond is among the hardest materials known, while graphite is soft enough to form a streak on paper (hence its name, from the Greek word "to write"). Diamond has a very low <a href="/wiki/Electrical_conductivity" title="Electrical conductivity" class="mw-redirect">electrical conductivity</a>, while graphite is a very good <a href="/wiki/Electrical_conductor" title="Electrical conductor">conductor</a>. Under normal conditions, diamond has the highest <a href="/wiki/Thermal_conductivity" title="Thermal conductivity">thermal conductivity</a> of <a href="/wiki/List_of_thermal_conductivities" title="List of thermal conductivities">all known materials</a>.</p>
-			<p>All carbon allotropes are solids under normal conditions with graphite being the most <a href="/wiki/Thermodynamic_equilibrium" title="Thermodynamic equilibrium">thermodynamically stable</a> form. They are chemically resistant and require high temperature to react even with oxygen. The most common <a href="/wiki/Oxidation_state" title="Oxidation state">oxidation state</a> of carbon in <a href="/wiki/Inorganic_compounds" title="Inorganic compounds" class="mw-redirect">inorganic compounds</a> is +4, while +2 is found in <a href="/wiki/Carbon_monoxide" title="Carbon monoxide">carbon monoxide</a> and other <a href="/wiki/Transition_metal" title="Transition metal">transition metal</a> <a href="/wiki/Metal_carbonyl" title="Metal carbonyl">carbonyl</a> complexes. The largest sources of inorganic carbon are <a href="/wiki/Limestone" title="Limestone">limestones</a>, <a href="/wiki/Dolomite" title="Dolomite">dolomites</a> and <a href="/wiki/Carbon_dioxide" title="Carbon dioxide">carbon dioxide</a>, but significant quantities occur in organic deposits of <a href="/wiki/Coal" title="Coal">coal</a>, <a href="/wiki/Peat" title="Peat">peat</a>, <a href="/wiki/Petroleum" title="Petroleum">oil</a> and <a href="/wiki/Methane_clathrate" title="Methane clathrate">methane clathrates</a>. Carbon forms more <a href="/wiki/Chemical_compound" title="Chemical compound">compounds</a> than any other element, with almost ten million pure <a href="/wiki/Organic_compound" title="Organic compound">organic compounds</a> described to date, which in turn are a tiny fraction of such compounds that are theoretically possible under standard conditions.<sup id="cite_ref-lanl_12-0" class="reference"><a href="#cite_note-lanl-12"><span>[</span>13<span>]</span></a></sup></p>
-			<p>Carbon is the 15th <a href="/wiki/Abundance_of_elements_in_Earth%27s_crust" title="Abundance of elements in Earth's crust">most abundant</a> element in the Earth's crust, and the <a href="/wiki/Abundance_of_the_chemical_elements" title="Abundance of the chemical elements">fourth most abundant element in the universe by mass</a> after <a href="/wiki/Hydrogen" title="Hydrogen">hydrogen</a>, <a href="/wiki/Helium" title="Helium">helium</a>, and <a href="/wiki/Oxygen" title="Oxygen">oxygen</a>. It is present in all known life forms, and in the human body carbon is the second most abundant element by mass (about 18.5%) after oxygen.<sup id="cite_ref-13" class="reference"><a href="#cite_note-13"><span>[</span>14<span>]</span></a></sup> This abundance, together with the unique diversity of <a href="/wiki/Organic_compounds" title="Organic compounds" class="mw-redirect">organic compounds</a> and their unusual polymer-forming ability at the temperatures commonly encountered on <a href="/wiki/Earth" title="Earth">Earth</a>, make this element the chemical basis of all known life.</p>
-
-			<h2> <span class="mw-headline" id="Characteristics">Characteristics</span></h2>
-			<div class="thumb tleft">
-			<div class="thumbinner" style="width:222px;"><a href="/wiki/File:Carbon_basic_phase_diagram.png" class="image"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/46/Carbon_basic_phase_diagram.png/220px-Carbon_basic_phase_diagram.png" width="220" height="167" class="thumbimage" /></a>
-			<div class="thumbcaption">
-			Theoretically predicted phase diagram of carbon</div>
+	<p>Three examples of the gallery are shown, to show the different effects of the scrollBoundary and scrollResponseBoundary options.</p>
+	<h3>Example One</h3>
+	<p>This example is set up as you might want to set up a genuine gallery.  Scrolling responds at once, using a scrollResponseBoundary of 1, but only locks scrolling to that axis after 15 pixels using a scrollBoundary of 15.  Panning takes a little more to respond, with a scrollResponseBoundary of 8, and also locks to panning using a scrollBoundary of 20.  Scrolls respond instantly but can convert to pans, and scrolling is preferred over panning if the input movement is diagonal.</p>
+	<div id='gallery_one' class='gallerywrapper'>
+		<div class='scrollable_h'>
+	
+			<!-- Content from Wikipedia.  Skip to the bottom for the scroller JavaScript. -->
+			<div class="horizontalwrapper">
+				<div class='scrollable_v1 vscroller'><section>
+				<h2>Carbon</h2>
+				<p><b>Carbon</b> (from Latin: <i>carbo</i> "coal") is the chemical element with symbol <b>C</b> and atomic number 6. As a member of group 14 on the periodic table, it is nonmetallic and tetravalent—making four electrons available to form covalent chemical bonds. There are three naturally occurring isotopes, with <sup>12</sup>C and <sup>13</sup>C being stable, while <sup>14</sup>C is radioactive, decaying with a half-life of about 5,730&nbsp;years. Carbon is one of the few elements known since antiquity.</p>
+				<p>There are several allotropes of carbon of which the best known are graphite, diamond, and amorphous carbon. The physical properties of carbon vary widely with the allotropic form. For example, diamond is highly transparent, while graphite is opaque and black. Diamond is among the hardest materials known, while graphite is soft enough to form a streak on paper (hence its name, from the Greek word "to write"). Diamond has a very low electrical conductivity, while graphite is a very good conductor. Under normal conditions, diamond has the highest thermal conductivity of all known materials.</p>
+				<p>All carbon allotropes are solids under normal conditions with graphite being the most thermodynamically stable form. They are chemically resistant and require high temperature to react even with oxygen. The most common oxidation state of carbon in inorganic compounds is +4, while +2 is found in carbon monoxide and other transition metal carbonyl complexes. The largest sources of inorganic carbon are limestones, dolomites and carbon dioxide, but significant quantities occur in organic deposits of coal, peat, oil and methane clathrates. Carbon forms more compounds than any other element, with almost ten million pure organic compounds described to date, which in turn are a tiny fraction of such compounds that are theoretically possible under standard conditions.</p>
+				<p>Carbon is the 15th most abundant element in the Earth's crust, and the fourth most abundant element in the universe by mass after hydrogen, helium, and oxygen. It is present in all known life forms, and in the human body carbon is the second most abundant element by mass (about 18.5%) after oxygen. This abundance, together with the unique diversity of organic compounds and their unusual polymer-forming ability at the temperatures commonly encountered on Earth, make this element the chemical basis of all known life.</p>
+	
+				<h2> <span class="mw-headline" id="Characteristics">Characteristics</span></h2>
+				<p>The different forms or <i>allotropes</i> of carbon (see below) include the hardest naturally occurring substance, diamond, and also one of the softest known substances, graphite. Moreover, it has an affinity for bonding with other small atoms, including other carbon atoms, and is capable of forming multiple stable covalent bonds with such atoms. As a result, carbon is known to form almost ten million different compounds; the large majority of all chemical compounds. Carbon also has the highest sublimation point of all elements. At atmospheric pressure it has no melting point as its triple point is at 10.8 ± 0.2&nbsp;MPa and 4,600 ± 300 K (~4,330 °C or 7,820 °F), so it sublimates at about 3,900&nbsp;K.</p>
+				<p>Carbon sublimes in a carbon arc which has a temperature of about 5,800 K (5,530 °C; 9,980 °F). Thus, irrespective of its allotropic form, carbon remains solid at higher temperatures than the highest melting point metals such as tungsten or rhenium. Although thermodynamically prone to oxidation, carbon resists oxidation more effectively than elements such as iron and copper that are weaker reducing agents at room temperature.</p>
+				<p>Carbon compounds form the basis of all known life on Earth, and the carbon-nitrogen cycle provides some of the energy produced by the Sun and other stars. Although it forms an extraordinary variety of compounds, most forms of carbon are comparatively unreactive under normal conditions. At standard temperature and pressure, it resists all but the strongest oxidizers. It does not react with sulfuric acid, hydrochloric acid, chlorine or any alkalis. At elevated temperatures carbon reacts with oxygen to form carbon oxides, and will reduce such metal oxides as iron oxide to the metal. This exothermic reaction is used in the iron and steel industry to control the carbon content of steel:</p>
+				<dl>
+				<dd><span class="chemf" style="white-space:nowrap;">Fe<sub>3</sub>O<sub>4</sub></span> + 4 C<sub>(s)</sub> → 3 Fe<sub>(s)</sub> + 4 CO<sub>(g)</sub></dd>
+				</dl>
+				<p>with sulfur to form carbon disulfide and with steam in the coal-gas reaction:</p>
+				<dl>
+				<dd>C<sub>(s)</sub> + H<sub>2</sub>O<sub>(g)</sub> → CO<sub>(g)</sub> + H<sub>2(g)</sub>.</dd>
+				</dl>
+				<p>Carbon combines with some metals at high temperatures to form metallic carbides, such as the iron carbide cementite in steel, and tungsten carbide, widely used as an abrasive and for making hard tips for cutting tools.</p>
+				<p>As of 2009, graphene appears to be the strongest material ever tested. However, the process of separating it from graphite will require some technological development before it is economical enough to be used in industrial processes.</p>
+			</section></div><div class='scrollable_v2 vscroller'><section>
+				<h2>Oxygen</h2>
+				<p><b>Oxygen</b> is the element with atomic number 8 and represented by the symbol <b>O</b>. Its name derives from the Greek roots ὀξύς (oxys) ("acid", literally "sharp", referring to the sour taste of acids) and -γενής (-genēs) ("producer", literally "begetter"), because at the time of naming, it was mistakenly thought that all acids required oxygen in their composition. At standard temperature and pressure, two atoms of the element bind to form dioxygen, a very pale blue, odorless, tasteless diatomic gas with the formula <span class="chemf" style="white-space:nowrap;">O<sub>2</sub></span>.</p>
+				<p>Oxygen is a member of the chalcogen group on the periodic table and is a highly reactive nonmetallic element that readily forms compounds (notably oxides) with almost all other elements. Oxygen is a strong oxidizing agent and has the second-highest electronegativity of all the elements (only fluorine has a higher electronegativity). By mass, oxygen is the third-most abundant element in the universe, after hydrogen and helium and the most abundant element by mass in the Earth's crust, making up almost half of the crust's mass. Free oxygen is too chemically reactive to appear on Earth without the photosynthetic action of living organisms, which use the energy of sunlight to produce elemental oxygen from water. Elemental <span class="chemf" style="white-space:nowrap;">O<sub>2</sub></span> only began to accumulate in the atmosphere after the evolutionary appearance of these organisms, roughly 2.5&nbsp;billion years ago. Diatomic oxygen gas constitutes 20.8% of the volume of air.</p>
+				<p>Because it comprises most of the mass in water, oxygen comprises most of the mass of living organisms (for example, about two-thirds of the human body's mass). All major classes of structural molecules in living organisms, such as proteins, carbohydrates, and fats, contain oxygen, as do the major inorganic compounds that comprise animal shells, teeth, and bone. Elemental oxygen is produced by cyanobacteria, algae and plants, and is used in cellular respiration for all complex life. Oxygen is toxic to obligately anaerobic organisms, which were the dominant form of early life on Earth until <span class="chemf" style="white-space:nowrap;">O<sub>2</sub></span> began to accumulate in the atmosphere. Another form (allotrope) of oxygen, ozone (<span class="chemf" style="white-space:nowrap;">O<sub>3</sub></span>), helps protect the biosphere from ultraviolet radiation with the high-altitude ozone layer, but is a pollutant near the surface where it is a by-product of smog. At even higher low earth orbit altitudes atomic oxygen is a significant presence and a cause of erosion for spacecraft.</p>
+				<p>Oxygen was independently discovered by Carl Wilhelm Scheele, in Uppsala, in 1773 or earlier, and Joseph Priestley in Wiltshire, in 1774, but Priestley is often given priority because his work was published first. The name <i>oxygen</i> was coined in 1777 by Antoine Lavoisier, whose experiments with oxygen helped to discredit the then-popular phlogiston theory of combustion and corrosion. Oxygen is produced industrially by fractional distillation of liquefied air, use of zeolites with pressure-cycling to concentrate oxygen from air, electrolysis of water and other means. Uses of oxygen include the production of steel, plastics and textiles; rocket propellant; oxygen therapy; and life support in aircraft, submarines, spaceflight and diving.</p>
+				<h2><span class="mw-headline" id="Characteristics">Characteristics</span></h2>
+				<h3><span class="mw-headline" id="Structure">Structure</span></h3>
+				<div class="thumb tleft">
+				<div class="thumbinner" style="width:172px;"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/45/Oxygen_discharge_tube.jpg/170px-Oxygen_discharge_tube.jpg" width="170" height="57" class="thumbimage" />
+				<div class="thumbcaption">
+				Oxygen discharge (spectrum) tube</div>
+				</div>
+				</div>
+				<p>At standard temperature and pressure, oxygen is a very pale blue, odorless gas with the molecular formula <span class="chemf" style="white-space:nowrap;">O<sub>2</sub></span>, in which the two oxygen atoms are chemically bonded to each other with a spin triplet electron configuration. This bond has a bond order of two, and is often simplified in description as a double bond or as a combination of one two-electron bond and two three-electron bonds.</p>
+				<p>Triplet oxygen (not to be confused with ozone, <span class="chemf" style="white-space:nowrap;">O<sub>3</sub></span>) is the ground state of the <span class="chemf" style="white-space:nowrap;">O<sub>2</sub></span> molecule. The electron configuration of the molecule has two unpaired electrons occupying two degenerate molecular orbitals. These orbitals are classified as antibonding (weakening the bond order from three to two), so the diatomic oxygen bond is weaker than the diatomic nitrogen triple bond in which all bonding molecular orbitals are filled, but some antibonding orbitals are not.</p>
+				<div class="thumb tleft">
+				<div class="thumbinner" style="width:172px;"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Paramagnetism_of_liquid_oxygen.jpeg/170px-Paramagnetism_of_liquid_oxygen.jpeg" width="170" height="120" class="thumbimage" />
+				<div class="thumbcaption">
+				A trickle of liquid oxygen is deflected by a magnetic field, illustrating its paramagnetic property</div>
+				</div>
+				</div>
+				<p>In normal triplet form, <span class="chemf" style="white-space:nowrap;">O<sub>2</sub></span> molecules are paramagnetic. That is, they form a magnet in the presence of a magnetic field—because of the spin magnetic moments of the unpaired electrons in the molecule, and the negative exchange energy between neighboring <span class="chemf" style="white-space:nowrap;">O<sub>2</sub></span> molecules. Liquid oxygen is attracted to a magnet to a sufficient extent that, in laboratory demonstrations, a bridge of liquid oxygen may be supported against its own weight between the poles of a powerful magnet.</p>
+				<p>Singlet oxygen is a name given to several higher-energy species of molecular <span class="chemf" style="white-space:nowrap;">O<sub>2</sub></span> in which all the electron spins are paired. It is much more reactive towards common organic molecules than is molecular oxygen per se. In nature, singlet oxygen is commonly formed from water during photosynthesis, using the energy of sunlight. It is also produced in the troposphere by the photolysis of ozone by light of short wavelength, and by the immune system as a source of active oxygen. Carotenoids in photosynthetic organisms (and possibly also in animals) play a major role in absorbing energy from singlet oxygen and converting it to the unexcited ground state before it can cause harm to tissues.</p>
+			</section></div>
 			</div>
-			</div>
-			<p>The different forms or <i><a href="/wiki/Allotropes" title="Allotropes" class="mw-redirect">allotropes</a></i> of carbon (see below) include the hardest naturally occurring substance, <a href="/wiki/Diamond" title="Diamond">diamond</a>, and also one of the softest known substances, <a href="/wiki/Graphite" title="Graphite">graphite</a>. Moreover, it has an affinity for <a href="/wiki/Chemical_bond" title="Chemical bond">bonding</a> with other small <a href="/wiki/Atom" title="Atom">atoms</a>, including other carbon atoms, and is capable of forming multiple stable <a href="/wiki/Covalent" title="Covalent" class="mw-redirect">covalent</a> bonds with such atoms. As a result, carbon is known to form almost ten million different compounds; the large majority of all <a href="/wiki/Chemical_compounds" title="Chemical compounds" class="mw-redirect">chemical compounds</a>.<sup id="cite_ref-lanl_12-1" class="reference"><a href="#cite_note-lanl-12"><span>[</span>13<span>]</span></a></sup> Carbon also has the highest <a href="/wiki/Sublimation_(chemistry)" title="Sublimation (chemistry)" class="mw-redirect">sublimation</a> point of all elements. At <a href="/wiki/Atmospheric_pressure" title="Atmospheric pressure">atmospheric pressure</a> it has no melting point as its <a href="/wiki/Triple_point" title="Triple point">triple point</a> is at 10.8 ± 0.2&nbsp;MPa and 4,600 ± 300 K (~4,330 °C or 7,820 °F),<sup id="cite_ref-triple2_1-1" class="reference"><a href="#cite_note-triple2-1"><span>[</span>2<span>]</span></a></sup><sup id="cite_ref-triple3_2-1" class="reference"><a href="#cite_note-triple3-2"><span>[</span>3<span>]</span></a></sup> so it sublimates at about 3,900&nbsp;K.<sup id="cite_ref-triple_14-0" class="reference"><a href="#cite_note-triple-14"><span>[</span>15<span>]</span></a></sup><sup id="cite_ref-15" class="reference"><a href="#cite_note-15"><span>[</span>16<span>]</span></a></sup></p>
-			<p>Carbon sublimes in a carbon arc which has a temperature of about 5,800 K (5,530 °C; 9,980 °F). Thus, irrespective of its allotropic form, carbon remains solid at higher temperatures than the highest melting point metals such as <a href="/wiki/Tungsten" title="Tungsten">tungsten</a> or <a href="/wiki/Rhenium" title="Rhenium">rhenium</a>. Although thermodynamically prone to oxidation, carbon resists oxidation more effectively than elements such as iron and copper that are weaker reducing agents at room temperature.</p>
-			<p>Carbon compounds form the basis of all known life on <a href="/wiki/Earth" title="Earth">Earth</a>, and the <a href="/wiki/CNO_cycle" title="CNO cycle">carbon-nitrogen cycle</a> provides some of the energy produced by the <a href="/wiki/Sun" title="Sun">Sun</a> and other stars. Although it forms an extraordinary variety of compounds, most forms of carbon are comparatively unreactive under normal conditions. At standard temperature and pressure, it resists all but the strongest oxidizers. It does not react with <a href="/wiki/Sulfuric_acid" title="Sulfuric acid">sulfuric acid</a>, <a href="/wiki/Hydrochloric_acid" title="Hydrochloric acid">hydrochloric acid</a>, <a href="/wiki/Chlorine" title="Chlorine">chlorine</a> or any alkalis. At elevated temperatures carbon reacts with oxygen to form carbon oxides, and will reduce such metal oxides as iron oxide to the metal. This <a href="/wiki/Exothermic" title="Exothermic">exothermic</a> reaction is used in the iron and steel industry to control the carbon content of steel:</p>
-			<dl>
-			<dd><span class="chemf" style="white-space:nowrap;">Fe<sub>3</sub>O<sub>4</sub></span> + 4 C<sub>(s)</sub> → 3 Fe<sub>(s)</sub> + 4 CO<sub>(g)</sub></dd>
-			</dl>
-			<p>with <a href="/wiki/Sulfur" title="Sulfur">sulfur</a> to form <a href="/wiki/Carbon_disulfide" title="Carbon disulfide">carbon disulfide</a> and with steam in the coal-gas reaction:</p>
-			<dl>
-			<dd>C<sub>(s)</sub> + H<sub>2</sub>O<sub>(g)</sub> → CO<sub>(g)</sub> + H<sub>2(g)</sub>.</dd>
-			</dl>
-			<p>Carbon combines with some metals at high temperatures to form metallic carbides, such as the iron carbide <a href="/wiki/Cementite" title="Cementite">cementite</a> in steel, and <a href="/wiki/Tungsten_carbide" title="Tungsten carbide">tungsten carbide</a>, widely used as an <a href="/wiki/Abrasive" title="Abrasive">abrasive</a> and for making hard tips for cutting tools.</p>
-			<p>As of 2009, <a href="/wiki/Graphene" title="Graphene">graphene</a> appears to be the strongest material ever tested.<sup id="cite_ref-lee_16-0" class="reference"><a href="#cite_note-lee-16"><span>[</span>17<span>]</span></a></sup> However, the process of separating it from <a href="/wiki/Graphite" title="Graphite">graphite</a> will require some technological development before it is economical enough to be used in industrial processes.<sup id="cite_ref-nypost_17-0" class="reference"><a href="#cite_note-nypost-17"><span>[</span>18<span>]</span></a></sup></p>
-		</section></div><div id='scrollable_v2' class='vscroller'><section>
-			<h2>Oxygen</h2>
-			<p><b>Oxygen</b> (<span class="nowrap"><span title="pronunciation:"><img alt="play" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Loudspeaker.svg/11px-Loudspeaker.svg.png" width="11" height="11" /></span>&nbsp;<span title="Representation in the International Phonetic Alphabet (IPA)" class="IPA"><a href="/wiki/Wikipedia:IPA_for_English" title="Wikipedia:IPA for English">/</a></span><span class="IPA"><a href="/wiki/Wikipedia:IPA_for_English#Key" title="Wikipedia:IPA for English"><span title="/ˈ/ primary stress follows" style="border-bottom:1px dotted">ˈ</span></a></span><span class="IPA"><a href="/wiki/Wikipedia:IPA_for_English#Key" title="Wikipedia:IPA for English"><span title="/ɒ/ short 'o' in 'body'" style="border-bottom:1px dotted">ɒ</span></a></span><span class="IPA"><a href="/wiki/Wikipedia:IPA_for_English#Key" title="Wikipedia:IPA for English"><span title="'k' in 'kind'" style="border-bottom:1px dotted">k</span></a></span><span class="IPA"><a href="/wiki/Wikipedia:IPA_for_English#Key" title="Wikipedia:IPA for English"><span title="'s' in 'sigh'" style="border-bottom:1px dotted">s</span></a></span><span class="IPA"><a href="/wiki/Wikipedia:IPA_for_English#Key" title="Wikipedia:IPA for English"><span title="/ɨ/ 'e' in 'roses'" style="border-bottom:1px dotted">ɨ</span></a></span><span class="IPA"><a href="/wiki/Wikipedia:IPA_for_English#Key" title="Wikipedia:IPA for English"><span title="/dʒ/ 'j' in 'jam'" style="border-bottom:1px dotted">dʒ</span></a></span><span class="IPA"><a href="/wiki/Wikipedia:IPA_for_English#Key" title="Wikipedia:IPA for English"><span title="/ɨ/ 'e' in 'roses'" style="border-bottom:1px dotted">ɨ</span></a></span><span class="IPA"><a href="/wiki/Wikipedia:IPA_for_English#Key" title="Wikipedia:IPA for English"><span title="'n' in 'nigh'" style="border-bottom:1px dotted">n</span></a></span><span title="Representation in the International Phonetic Alphabet (IPA)" class="IPA"><a href="/wiki/Wikipedia:IPA_for_English" title="Wikipedia:IPA for English">/</a></span></span> <span title="English pronunciation respelling" class="IPA"><a href="/wiki/Wikipedia:Pronunciation_respelling_key" title="Wikipedia:Pronunciation respelling key"><i><b><span class="SMALLCAPS" style="FONT-VARIANT:SMALL-CAPS;"><span class="NOCAPS" style="TEXT-TRANSFORM:LOWERCASE;">OK</span></span></b>-si-jin</i></a></span>) is the <a href="/wiki/Chemical_element" title="Chemical element">element</a> with <a href="/wiki/Atomic_number" title="Atomic number">atomic number</a> 8 and represented by the symbol <b>O</b>. Its name derives from the <a href="/wiki/Greek_language" title="Greek language">Greek</a> roots ὀξύς (oxys) ("acid", literally "sharp", referring to the <a href="/wiki/Sour_taste" title="Sour taste" class="mw-redirect">sour taste</a> of <a href="/wiki/Acid" title="Acid">acids</a>) and -γενής (-genēs) ("producer", literally "begetter"), because at the time of naming, it was mistakenly thought that all acids required oxygen in their composition. At <a href="/wiki/Standard_temperature_and_pressure" title="Standard temperature and pressure" class="mw-redirect">standard temperature and pressure</a>, two atoms of the element <a href="/wiki/Chemical_bond" title="Chemical bond">bind</a> to form dioxygen, a very pale blue, odorless, tasteless <a href="/wiki/Diatomic_molecule" title="Diatomic molecule">diatomic</a> <a href="/wiki/Gas" title="Gas">gas</a> with the formula <span class="chemf" style="white-space:nowrap;">O<sub>2</sub></span>.</p>
-			<p>Oxygen is a member of the <a href="/wiki/Chalcogen" title="Chalcogen">chalcogen</a> <a href="/wiki/Group_(periodic_table)" title="Group (periodic table)">group</a> on the <a href="/wiki/Periodic_table" title="Periodic table">periodic table</a> and is a highly <a href="/wiki/Chemical_reaction" title="Chemical reaction">reactive</a> <a href="/wiki/Nonmetal" title="Nonmetal">nonmetallic</a> element that readily forms <a href="/wiki/Chemical_compound" title="Chemical compound">compounds</a> (notably <a href="/wiki/Oxide" title="Oxide">oxides</a>) with almost all other elements. Oxygen is a strong <a href="/wiki/Oxidizing_agent" title="Oxidizing agent">oxidizing agent</a> and has the second-highest <a href="/wiki/Electronegativity" title="Electronegativity">electronegativity</a> of all the elements (only <a href="/wiki/Fluorine" title="Fluorine">fluorine</a> has a higher electronegativity).<sup id="cite_ref-0" class="reference"><a href="#cite_note-0"><span>[</span>1<span>]</span></a></sup> By mass, oxygen is the <a href="/wiki/Abundance_of_the_chemical_elements" title="Abundance of the chemical elements">third-most abundant</a> element in the universe, after <a href="/wiki/Hydrogen" title="Hydrogen">hydrogen</a> and <a href="/wiki/Helium" title="Helium">helium</a><sup id="cite_ref-NBB297_1-0" class="reference"><a href="#cite_note-NBB297-1"><span>[</span>2<span>]</span></a></sup> and the <a href="/wiki/Abundances_of_the_elements_(data_page)" title="Abundances of the elements (data page)">most abundant</a> element by mass in the <a href="/wiki/Crust_(geology)#Earth.27s_crust" title="Crust (geology)">Earth's crust</a>, making up almost half of the crust's mass.<sup id="cite_ref-lanl_2-0" class="reference"><a href="#cite_note-lanl-2"><span>[</span>3<span>]</span></a></sup> Free oxygen is too chemically reactive to appear on Earth without the <a href="/wiki/Photosynthesis" title="Photosynthesis">photosynthetic</a> action of living organisms, which use the energy of sunlight to produce elemental oxygen from water. Elemental <span class="chemf" style="white-space:nowrap;">O<sub>2</sub></span> only began to accumulate in the atmosphere after the evolutionary appearance of these organisms, roughly 2.5&nbsp;billion years ago.<sup id="cite_ref-3" class="reference"><a href="#cite_note-3"><span>[</span>4<span>]</span></a></sup> Diatomic oxygen gas constitutes 20.8% of the volume of <a href="/wiki/Earth%27s_atmosphere" title="Earth's atmosphere" class="mw-redirect">air</a>.<sup id="cite_ref-ECE500_4-0" class="reference"><a href="#cite_note-ECE500-4"><span>[</span>5<span>]</span></a></sup></p>
-			<p>Because it comprises most of the mass in water, oxygen comprises most of the mass of living organisms (for example, about two-thirds of the human body's mass). All major classes of structural molecules in living organisms, such as <a href="/wiki/Protein" title="Protein">proteins</a>, <a href="/wiki/Carbohydrate" title="Carbohydrate">carbohydrates</a>, and <a href="/wiki/Fat" title="Fat">fats</a>, contain oxygen, as do the major <a href="/wiki/Inorganic_compound" title="Inorganic compound">inorganic compounds</a> that comprise animal shells, teeth, and bone. Elemental oxygen is produced by <a href="/wiki/Cyanobacteria" title="Cyanobacteria">cyanobacteria</a>, <a href="/wiki/Algae" title="Algae">algae</a> and plants, and is used in <a href="/wiki/Cellular_respiration" title="Cellular respiration">cellular respiration</a> for all complex life. Oxygen is toxic to <a href="/wiki/Obligate_anaerobe" title="Obligate anaerobe">obligately anaerobic organisms</a>, which were the dominant form of <a href="/wiki/Evolutionary_history_of_life" title="Evolutionary history of life">early life</a> on Earth until <span class="chemf" style="white-space:nowrap;">O<sub>2</sub></span> began to accumulate in the atmosphere. Another form (<a href="/wiki/Allotropes_of_oxygen" title="Allotropes of oxygen">allotrope</a>) of oxygen, <a href="/wiki/Ozone" title="Ozone">ozone</a> (<span class="chemf" style="white-space:nowrap;">O<sub>3</sub></span>), helps protect the biosphere from <a href="/wiki/Ultraviolet_radiation" title="Ultraviolet radiation" class="mw-redirect">ultraviolet radiation</a> with the high-altitude <a href="/wiki/Ozone_layer" title="Ozone layer">ozone layer</a>, but is a pollutant near the surface where it is a by-product of <a href="/wiki/Smog" title="Smog">smog</a>. At even higher <a href="/wiki/Low_earth_orbit" title="Low earth orbit" class="mw-redirect">low earth orbit</a> altitudes atomic oxygen is a significant presence and a cause of <a href="/wiki/Corrosion_in_space" title="Corrosion in space">erosion for spacecraft</a>.<sup id="cite_ref-5" class="reference"><a href="#cite_note-5"><span>[</span>6<span>]</span></a></sup></p>
-			<p>Oxygen was independently discovered by <a href="/wiki/Carl_Wilhelm_Scheele" title="Carl Wilhelm Scheele">Carl Wilhelm Scheele</a>, in <a href="/wiki/Uppsala" title="Uppsala">Uppsala</a>, in 1773 or earlier, and <a href="/wiki/Joseph_Priestley" title="Joseph Priestley">Joseph Priestley</a> in <a href="/wiki/Wiltshire" title="Wiltshire">Wiltshire</a>, in 1774, but Priestley is often given priority because his work was published first. The name <i>oxygen</i> was coined in 1777 by <a href="/wiki/Antoine_Lavoisier" title="Antoine Lavoisier">Antoine Lavoisier</a>,<sup id="cite_ref-mellor_6-0" class="reference"><a href="#cite_note-mellor-6"><span>[</span>7<span>]</span></a></sup> whose experiments with oxygen helped to discredit the then-popular <a href="/wiki/Phlogiston_theory" title="Phlogiston theory">phlogiston theory</a> of <a href="/wiki/Combustion" title="Combustion">combustion</a> and <a href="/wiki/Corrosion" title="Corrosion">corrosion</a>. <a href="/wiki/Oxygen#Industrial_production" title="Oxygen">Oxygen is produced industrially</a> by <a href="/wiki/Fractional_distillation" title="Fractional distillation">fractional distillation</a> of liquefied air, use of <a href="/wiki/Zeolite" title="Zeolite">zeolites</a> with <a href="/wiki/Pressure_swing_adsorption" title="Pressure swing adsorption">pressure-cycling</a> to concentrate oxygen from air, <a href="/wiki/Electrolysis_of_water" title="Electrolysis of water">electrolysis of water</a> and other means. Uses of oxygen include the production of steel, plastics and textiles; <a href="/wiki/Rocket_propellant" title="Rocket propellant">rocket propellant</a>; <a href="/wiki/Oxygen_therapy" title="Oxygen therapy">oxygen therapy</a>; and life support in aircraft, submarines, <a href="/wiki/Human_spaceflight" title="Human spaceflight">spaceflight</a> and <a href="/wiki/Underwater_diving" title="Underwater diving">diving</a>.</p>
-			<table id="toc" class="toc tochidden">
-			<tbody><tr>
-			<td>
-			<div id="toctitle">
-			<h2>Contents</h2>
-			<span class="toctoggle">&nbsp;[<a href="#" class="internal" id="togglelink">show</a>]&nbsp;</span></div>
-			<ul style="display: none; ">
-			<li class="toclevel-1 tocsection-1"><a href="#Characteristics"><span class="tocnumber">1</span> <span class="toctext">Characteristics</span></a>
-			<ul>
-			<li class="toclevel-2 tocsection-2"><a href="#Structure"><span class="tocnumber">1.1</span> <span class="toctext">Structure</span></a></li>
-			<li class="toclevel-2 tocsection-3"><a href="#Allotropes"><span class="tocnumber">1.2</span> <span class="toctext">Allotropes</span></a></li>
-			<li class="toclevel-2 tocsection-4"><a href="#Physical_properties"><span class="tocnumber">1.3</span> <span class="toctext">Physical properties</span></a></li>
-			<li class="toclevel-2 tocsection-5"><a href="#Isotopes_and_stellar_origin"><span class="tocnumber">1.4</span> <span class="toctext">Isotopes and stellar origin</span></a></li>
-			<li class="toclevel-2 tocsection-6"><a href="#Occurrence"><span class="tocnumber">1.5</span> <span class="toctext">Occurrence</span></a></li>
-			</ul>
-			</li>
-			<li class="toclevel-1 tocsection-7"><a href="#Biological_role"><span class="tocnumber">2</span> <span class="toctext">Biological role</span></a>
-			<ul>
-			<li class="toclevel-2 tocsection-8"><a href="#Photosynthesis_and_respiration"><span class="tocnumber">2.1</span> <span class="toctext">Photosynthesis and respiration</span></a></li>
-			<li class="toclevel-2 tocsection-9"><a href="#Content_in_body"><span class="tocnumber">2.2</span> <span class="toctext">Content in body</span></a></li>
-			<li class="toclevel-2 tocsection-10"><a href="#Build-up_in_the_atmosphere"><span class="tocnumber">2.3</span> <span class="toctext">Build-up in the atmosphere</span></a></li>
-			</ul>
-			</li>
-			<li class="toclevel-1 tocsection-11"><a href="#History"><span class="tocnumber">3</span> <span class="toctext">History</span></a>
-			<ul>
-			<li class="toclevel-2 tocsection-12"><a href="#Early_experiments"><span class="tocnumber">3.1</span> <span class="toctext">Early experiments</span></a></li>
-			<li class="toclevel-2 tocsection-13"><a href="#Phlogiston_theory"><span class="tocnumber">3.2</span> <span class="toctext">Phlogiston theory</span></a></li>
-			<li class="toclevel-2 tocsection-14"><a href="#Discovery"><span class="tocnumber">3.3</span> <span class="toctext">Discovery</span></a></li>
-			<li class="toclevel-2 tocsection-15"><a href="#Lavoisier.27s_contribution"><span class="tocnumber">3.4</span> <span class="toctext">Lavoisier's contribution</span></a></li>
-			<li class="toclevel-2 tocsection-16"><a href="#Later_history"><span class="tocnumber">3.5</span> <span class="toctext">Later history</span></a></li>
-			</ul>
-			</li>
-			<li class="toclevel-1 tocsection-17"><a href="#Industrial_production"><span class="tocnumber">4</span> <span class="toctext">Industrial production</span></a></li>
-			<li class="toclevel-1 tocsection-18"><a href="#Applications"><span class="tocnumber">5</span> <span class="toctext">Applications</span></a>
-			<ul>
-			<li class="toclevel-2 tocsection-19"><a href="#Medical"><span class="tocnumber">5.1</span> <span class="toctext">Medical</span></a></li>
-			<li class="toclevel-2 tocsection-20"><a href="#Life_support_and_recreational_use"><span class="tocnumber">5.2</span> <span class="toctext">Life support and recreational use</span></a></li>
-			<li class="toclevel-2 tocsection-21"><a href="#Industrial"><span class="tocnumber">5.3</span> <span class="toctext">Industrial</span></a></li>
-			<li class="toclevel-2 tocsection-22"><a href="#Scientific"><span class="tocnumber">5.4</span> <span class="toctext">Scientific</span></a></li>
-			</ul>
-			</li>
-			<li class="toclevel-1 tocsection-23"><a href="#Compounds"><span class="tocnumber">6</span> <span class="toctext">Compounds</span></a>
-			<ul>
-			<li class="toclevel-2 tocsection-24"><a href="#Oxides_and_other_inorganic_compounds"><span class="tocnumber">6.1</span> <span class="toctext">Oxides and other inorganic compounds</span></a></li>
-			<li class="toclevel-2 tocsection-25"><a href="#Organic_compounds_and_biomolecules"><span class="tocnumber">6.2</span> <span class="toctext">Organic compounds and biomolecules</span></a></li>
-			</ul>
-			</li>
-			<li class="toclevel-1 tocsection-26"><a href="#Safety_and_precautions"><span class="tocnumber">7</span> <span class="toctext">Safety and precautions</span></a>
-			<ul>
-			<li class="toclevel-2 tocsection-27"><a href="#Toxicity"><span class="tocnumber">7.1</span> <span class="toctext">Toxicity</span></a></li>
-			<li class="toclevel-2 tocsection-28"><a href="#Combustion_and_other_hazards"><span class="tocnumber">7.2</span> <span class="toctext">Combustion and other hazards</span></a></li>
-			</ul>
-			</li>
-			<li class="toclevel-1 tocsection-29"><a href="#See_also"><span class="tocnumber">8</span> <span class="toctext">See also</span></a></li>
-			<li class="toclevel-1 tocsection-30"><a href="#Notes_and_citations"><span class="tocnumber">9</span> <span class="toctext">Notes and citations</span></a></li>
-			<li class="toclevel-1 tocsection-31"><a href="#References"><span class="tocnumber">10</span> <span class="toctext">References</span></a></li>
-			<li class="toclevel-1 tocsection-32"><a href="#Further_reading"><span class="tocnumber">11</span> <span class="toctext">Further reading</span></a></li>
-			<li class="toclevel-1 tocsection-33"><a href="#External_links"><span class="tocnumber">12</span> <span class="toctext">External links</span></a></li>
-			</ul>
-			</td>
-			</tr>
-			</tbody></table>
-			<h2><span class="editsection">[<a href="/w/api.php?action=clicktracking&amp;format=json&amp;eventid=ext.articleFeedbackv5%402-optionSE_1E-section_edit_link-click&amp;namespacenumber=0&amp;token=8KzFggKZj3X6080wBvuJrebd8gebqkyoq&amp;additional=Oxygen%7C492295295&amp;redirectto=%2Fw%2Findex.php%3Ftitle%3DOxygen%26action%3Dedit%26section%3D1%26articleFeedbackv5_click_tracking%3D1%26articleFeedbackv5_ct_token%3D8KzFggKZj3X6080wBvuJrebd8gebqkyoq%26articleFeedbackv5_ct_event%3Dext.articleFeedbackv5%25402-optionSE_1E-section_edit_link" title="Edit section: Characteristics">edit</a>]</span> <span class="mw-headline" id="Characteristics">Characteristics</span></h2>
-			<h3><span class="editsection">[<a href="/w/api.php?action=clicktracking&amp;format=json&amp;eventid=ext.articleFeedbackv5%402-optionSE_1E-section_edit_link-click&amp;namespacenumber=0&amp;token=8KzFggKZj3X6080wBvuJrebd8gebqkyoq&amp;additional=Oxygen%7C492295295&amp;redirectto=%2Fw%2Findex.php%3Ftitle%3DOxygen%26action%3Dedit%26section%3D2%26articleFeedbackv5_click_tracking%3D1%26articleFeedbackv5_ct_token%3D8KzFggKZj3X6080wBvuJrebd8gebqkyoq%26articleFeedbackv5_ct_event%3Dext.articleFeedbackv5%25402-optionSE_1E-section_edit_link" title="Edit section: Structure">edit</a>]</span> <span class="mw-headline" id="Structure">Structure</span></h3>
-			<div class="thumb tleft">
-			<div class="thumbinner" style="width:172px;"><a href="/wiki/File:Oxygen_discharge_tube.jpg" class="image"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/45/Oxygen_discharge_tube.jpg/170px-Oxygen_discharge_tube.jpg" width="170" height="57" class="thumbimage" /></a>
-			<div class="thumbcaption">
-			Oxygen discharge (spectrum) tube</div>
-			</div>
-			</div>
-			<p>At <a href="/wiki/Standard_temperature_and_pressure" title="Standard temperature and pressure" class="mw-redirect">standard temperature and pressure</a>, oxygen is a very pale blue, odorless gas with the <a href="/wiki/Molecular_formula" title="Molecular formula" class="mw-redirect">molecular formula</a> <span class="chemf" style="white-space:nowrap;">O<sub>2</sub></span>, in which the two oxygen atoms are <a href="/wiki/Chemical_bond" title="Chemical bond">chemically bonded</a> to each other with a <a href="/wiki/Spin_triplet" title="Spin triplet" class="mw-redirect">spin triplet</a> <a href="/wiki/Electron_configuration" title="Electron configuration">electron configuration</a>. This bond has a <a href="/wiki/Bond_order" title="Bond order">bond order</a> of two, and is often simplified in description as a <a href="/wiki/Double_bond" title="Double bond">double bond</a><sup id="cite_ref-7" class="reference"><a href="#cite_note-7"><span>[</span>8<span>]</span></a></sup> or as a combination of one two-electron bond and two <a href="/wiki/Three-electron_bond" title="Three-electron bond" class="mw-redirect">three-electron bonds</a>.<sup id="cite_ref-pauling_8-0" class="reference"><a href="#cite_note-pauling-8"><span>[</span>9<span>]</span></a></sup></p>
-			<p><a href="/wiki/Triplet_oxygen" title="Triplet oxygen">Triplet oxygen</a> (not to be confused with <a href="/wiki/Ozone" title="Ozone">ozone</a>, <span class="chemf" style="white-space:nowrap;">O<sub>3</sub></span>) is the <a href="/wiki/Ground_state" title="Ground state">ground state</a> of the <span class="chemf" style="white-space:nowrap;">O<sub>2</sub></span> molecule.<sup id="cite_ref-BiochemOnline_9-0" class="reference"><a href="#cite_note-BiochemOnline-9"><span>[</span>10<span>]</span></a></sup> The electron configuration of the molecule has two unpaired electrons occupying two <a href="/wiki/Degenerate_orbitals" title="Degenerate orbitals" class="mw-redirect">degenerate</a> <a href="/wiki/Molecular_orbital" title="Molecular orbital">molecular orbitals</a>.<sup id="cite_ref-10" class="reference"><a href="#cite_note-10"><span>[</span>11<span>]</span></a></sup> These orbitals are classified as <a href="/wiki/Antibonding" title="Antibonding">antibonding</a> (weakening the bond order from three to two), so the diatomic oxygen bond is weaker than the diatomic <a href="/wiki/Nitrogen" title="Nitrogen">nitrogen</a> triple bond in which all bonding molecular orbitals are filled, but some antibonding orbitals are not.<sup id="cite_ref-BiochemOnline_9-1" class="reference"><a href="#cite_note-BiochemOnline-9"><span>[</span>10<span>]</span></a></sup></p>
-			<div class="thumb tleft">
-			<div class="thumbinner" style="width:172px;"><a href="/wiki/File:Paramagnetism_of_liquid_oxygen.jpeg" class="image"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Paramagnetism_of_liquid_oxygen.jpeg/170px-Paramagnetism_of_liquid_oxygen.jpeg" width="170" height="120" class="thumbimage" /></a>
-			<div class="thumbcaption">
-			A trickle of liquid oxygen is deflected by a magnetic field, illustrating its paramagnetic property</div>
-			</div>
-			</div>
-			<p>In normal triplet form, <span class="chemf" style="white-space:nowrap;">O<sub>2</sub></span> molecules are <a href="/wiki/Paramagnetism" title="Paramagnetism">paramagnetic</a>. That is, they form a magnet in the presence of a magnetic field—because of the <a href="/wiki/Spin_(physics)" title="Spin (physics)">spin</a> <a href="/wiki/Magnetic_moment" title="Magnetic moment">magnetic moments</a> of the unpaired electrons in the molecule, and the negative <a href="/wiki/Exchange_energy" title="Exchange energy" class="mw-redirect">exchange energy</a> between neighboring <span class="chemf" style="white-space:nowrap;">O<sub>2</sub></span> molecules.<sup id="cite_ref-NBB303_11-0" class="reference"><a href="#cite_note-NBB303-11"><span>[</span>12<span>]</span></a></sup> Liquid oxygen is attracted to a <a href="/wiki/Magnet" title="Magnet">magnet</a> to a sufficient extent that, in laboratory demonstrations, a bridge of liquid oxygen may be supported against its own weight between the poles of a powerful magnet.<sup id="cite_ref-12" class="reference"><a href="#cite_note-12"><span>[</span>13<span>]</span></a></sup><sup id="cite_ref-13" class="reference"><a href="#cite_note-13"><span>[</span>14<span>]</span></a></sup></p>
-			<p><a href="/wiki/Singlet_oxygen" title="Singlet oxygen">Singlet oxygen</a> is a name given to several higher-energy species of molecular <span class="chemf" style="white-space:nowrap;">O<sub>2</sub></span> in which all the electron spins are paired. It is much more reactive towards common <a href="/wiki/Organic_compound" title="Organic compound">organic molecules</a> than is molecular oxygen per se. In nature, singlet oxygen is commonly formed from water during photosynthesis, using the energy of sunlight.<sup id="cite_ref-14" class="reference"><a href="#cite_note-14"><span>[</span>15<span>]</span></a></sup> It is also produced in the <a href="/wiki/Troposphere" title="Troposphere">troposphere</a> by the photolysis of ozone by light of short wavelength,<sup id="cite_ref-harrison_15-0" class="reference"><a href="#cite_note-harrison-15"><span>[</span>16<span>]</span></a></sup> and by the immune system as a source of active oxygen.<sup id="cite_ref-immune-ozone_16-0" class="reference"><a href="#cite_note-immune-ozone-16"><span>[</span>17<span>]</span></a></sup> <a href="/wiki/Carotenoid" title="Carotenoid">Carotenoids</a> in photosynthetic organisms (and possibly also in animals) play a major role in absorbing energy from singlet oxygen and converting it to the unexcited ground state before it can cause harm to tissues.<sup id="cite_ref-17" class="reference"><a href="#cite_note-17"><span>[</span>18<span>]</span></a></sup></p>
-		</section></div>
 		</div>
 	</div>
+
+	<h3>Example Two</h3>
+	<p>This example is set up an an example of all FTScroller instances being left at the default settings of scrollResponseBoundary: 1 and scrollBoundary: 1.  This is generally undesirable with nested scrollers because finger-based input will often trigger a small scroll as the finger touches the screen, so it's hard to control the intended scroll direction.</p>
+	<div id='gallery_two' class='gallerywrapper'></div>
+
+	<h3>Example Three</h3>
+	<p>This example is set up with large boundaries (30px) for all scrollers or both the scrollResponseBoundary and scrollBoundary settings.  This requires a reasonable move before scrolls become locked to an axis, reducing the chance of accidental scrolls or pans, but the equally high response boundary means there is no visual feedback before scrolling is locked, which is also not desirable.</p>
+	<div id='gallery_three' class='gallerywrapper'></div>
 
 	<!--Include FT Scroller source (can be included at any point as long as it's loaded before being used)-->
 	<script src='../lib/ftscroller.js'></script>
@@ -155,27 +99,57 @@
 	<!--Set up the scrollers-->
 	<script>
 
-		// Set up default options for *all* scrollers using the global object FTScroller checks for
-		var FTScrollerOptions = {
-			windowScrollingActiveFlag: 'scrolling'
-		};
+		// Duplicate the content of the first wrapper into the second and third wrappers
+		var gallerycontent = document.querySelector('#gallery_one').innerHTML;
+		document.querySelector('#gallery_two').innerHTML = gallerycontent;
+		document.querySelector('#gallery_three').innerHTML = gallerycontent;
+
+
+		/** Demo one **/
 
 		// Set up options to be used by the two vertical scrollers and create them
 		var opts = {
-			scrollingX: false, 
-			scrollBoundary: 4
+			scrollingX: false,
+			scrollResponseBoundary: 1, // This is the default response boundary, spelt out for reference
+			scrollBoundary: 15
 		};
-		var scrollerv1 = new FTScroller(document.getElementById('scrollable_v1'), opts);
-		var scrollerv2 = new FTScroller(document.getElementById('scrollable_v2'), opts);
+		new FTScroller(document.querySelector('#gallery_one .scrollable_v1'), opts);
+		new FTScroller(document.querySelector('#gallery_one .scrollable_v2'), opts);
 
 		// Set up the horizontal scroller, enabling snapping and disabling bouncing
-		var topscroller = new FTScroller(document.getElementById('scrollable_h'), {
+		var panningOpts = {
 			scrollingY: false, 
 			scrollbars: false,
 			snapping: true,
-			scrollBoundary: 10,
+			scrollResponseBoundary: 8,
+			scrollBoundary: 20,
 			bouncing: false
-		});
+		};
+		new FTScroller(document.querySelector('#gallery_one .scrollable_h'), panningOpts);
+
+
+		/** Demo two **/
+
+		opts.scrollBoundary = 1;
+		new FTScroller(document.querySelector('#gallery_two .scrollable_v1'), opts);
+		new FTScroller(document.querySelector('#gallery_two .scrollable_v2'), opts);
+
+		panningOpts.scrollResponseBoundary = 1;
+		panningOpts.scrollBoundary = 1;
+		new FTScroller(document.querySelector('#gallery_two .scrollable_h'), panningOpts);
+
+
+		/** Demo three **/
+
+		// Set up options to be used by the two vertical scrollers and create them
+		opts.scrollBoundary = 30;
+		opts.scrollResponseBoundary = 30;
+		new FTScroller(document.querySelector('#gallery_three .scrollable_v1'), opts);
+		new FTScroller(document.querySelector('#gallery_three .scrollable_v2'), opts);
+
+		panningOpts.scrollResponseBoundary = 30;
+		panningOpts.scrollBoundary = 30;
+		new FTScroller(document.querySelector('#gallery_three .scrollable_h'), panningOpts);
 	</script>
 </body>
 </html>
