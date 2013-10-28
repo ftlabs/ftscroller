@@ -53,6 +53,7 @@ Options must be specified at create-time by passing a JSON object as the second 
 * `paginatedSnap` If snapping is enabled, restricts each scroll movement to one 'page' span.  That is, if set to true, it will not be possible to move more than one page in a single movement. _(boolean, default false)_
 * `scrollbars` Whether to display iOS-style scrollbars (which you can style yourself using `.ftscroller_scrollbar` and `.ftscroller_scrollbarx`/`.ftscroller_scrollbary`) while the content is animating _(boolean, default true)_
 * `scrollBoundary` The initial movement required to trigger a full scroll, in pixels; this is the point at which the scroll is exclusive to this particular FTScroller instance and flings become active _(integer, default 1)_
+* `scrollingClassName` The classname to add to the scroller container when it is being actively scrolled.  This is disabled by default as it can cause a CSS relayout if enabled, but allows custom styling in response to scrolls _(string, default not set)_
 * `scrollResponseBoundary` The initial movement required to trigger a visual scroll update, in pixels _(integer, default 1)_
 * `scrollingX` Enable scrolling on the X axis if content is available _(boolean, default true)_
 * `scrollingY` Enable scrolling on the Y axis if content is available _(boolean, default true)_
