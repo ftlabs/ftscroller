@@ -90,6 +90,7 @@ Once the scroller has been applied to an element, the return value from the cons
 * `scrollTo(left, top[, duration])` Scroll to a specified left and top offet over a specified duration.  If duration is zero, no animation will occur.  If duration is `true` FTScroller will itself choose a duration based on the distance to be scrolled.  The left and top inputs will be constrained by the size of the content and the snap points.  If false is supplied for either left or top, that axis will not be scrolled and will retain its current offset.
 * `setSnapSize(width, height)` Configures the snapping boundaries within the scrolling element if snapping is active.  If this is never called, segment size defaults to the width and height of the scroller, ie. page-at-a-time.
 * `updateDimensions(width, height[, nosnap])` Sets the dimensions of the scrollable content.  If snapping is enabled, and you wish to disable updates of the snapping grid and prevent the current position from being updated, set `nosnap` to true; it defaults to false if not supplied.
+* `setDisabledInputMethods(disabledInputMethods)` Set the input methods to disable. No inputs methods are disabled by default. `(object, default { mouse: false, touch: false, scroll: false })`
 
 ### Prototype methods
 
