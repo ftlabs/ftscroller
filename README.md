@@ -50,13 +50,13 @@ Options must be specified at create-time by passing a JSON object as the second 
 * `flinging` Allow a fast scroll to continue with momentum when released _(boolean, default true)_
 * `hwAccelerationClass` FTScroller uses normal translate properties rather than translate3d to position content when scrolling, and triggers hardware acceleration by adding CSS properties (specifically backface-visibility) to this class on platforms that support it.  Adjusting this class allows for negotiating complex CSS inheritance to override the default behaviour of FTScroller if you want to change or disable backing layers/3D acceleration. _(string, default an internal class which triggers backing layers)_
 * `maxFlingDuration` Set the maximum time (ms) that a fling can take to complete once the input has ended _(numeric, default 1000ms)_
-* `paginatedSnap` If snapping is enabled, restricts each scroll movement to one 'page' span.  That is, if set to true, it will not be possible to move more than one page in a single movement. _(boolean, default false)_
 * `scrollbars` Whether to display iOS-style scrollbars (which you can style yourself using `.ftscroller_scrollbar` and `.ftscroller_scrollbarx`/`.ftscroller_scrollbary`) while the content is animating _(boolean, default true)_
 * `scrollBoundary` The initial movement required to trigger a full scroll, in pixels; this is the point at which the scroll is exclusive to this particular FTScroller instance and flings become active _(integer, default 1)_
 * `scrollingClassName` The classname to add to the scroller container when it is being actively scrolled.  This is disabled by default as it can cause a CSS relayout if enabled, but allows custom styling in response to scrolls _(string, default not set)_
 * `scrollResponseBoundary` The initial movement required to trigger a visual scroll update, in pixels _(integer, default 1)_
 * `scrollingX` Enable scrolling on the X axis if content is available _(boolean, default true)_
 * `scrollingY` Enable scrolling on the Y axis if content is available _(boolean, default true)_
+* `singlePageScrolls` _(was `paginatedSnap`)_ If snapping is enabled, restricts each scroll movement to one 'page' span.  That is, if set to true, it will not be possible to move more than one page in a single movement. _(boolean, default false)_
 * `snapping` Enable snapping of content to defined 'pages' or segments _(boolean, default false)_
 * `snapSizeX` Define the horizontal interval content should snap to, in pixels.  If this is not set, snapping will be based on pages corresponding to the container size. _(numeric, default undefined)_
 * `snapSizeY` Define the vertical interval content should snap to, in pixels.  If this is not set, snapping will be based on pages corresponding to the container size. _(numeric, default undefined)_
