@@ -66,6 +66,7 @@ Options must be specified at create-time by passing a JSON object as the second 
 * `flingBezier` The bezier curve to use for momentum-like flings. _(CubicBezier, default CubicBezier(0.103, 0.389, 0.307, 0.966))_
 * `bounceDecelerationBezier` The bezier curve to use for deceleration when a fling hits the bounds. _(CubicBezier, default CubicBezier(0, 0.5, 0.5, 1))_
 * `bounceBezier` The bezier curve to use for bouncebacks when the scroll exceeds the bounds. _(CubicBezier, default CubicBezier(0.7, 0, 0.9, 0.6))_
+* `invertScrollWheel` If the scroller is constrained to an x axis, convert y scroll to allow single-axis scroll wheels to scroll constrained content. _(boolean, default true)_
 
 ## Public interface
 
